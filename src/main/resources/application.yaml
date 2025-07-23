@@ -1,0 +1,15 @@
+ktor:
+    application:
+        modules:
+            - com.cessup.ApplicationKt.module
+    deployment:
+        port: 8080
+
+    config:
+        apiUrl: "http://localhost:8080"
+        logLevel: "DEBUG"
+
+    mongodb:
+        databaseUri: "mongodb://localhost:27017"
+        sessionDB: "session_db"
+        storeDB : "store_db"
