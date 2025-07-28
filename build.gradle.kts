@@ -32,13 +32,13 @@ dependencies {
     // Optional: logging/debugging
     implementation("ch.qos.logback:logback-classic:1.5.13")
     //Mongo db
+    implementation("org.litote.kmongo:kmongo:4.11.0")
     implementation("org.litote.kmongo:kmongo-coroutine:4.11.0")
     //Encrypt
     implementation("at.favre.lib:bcrypt:0.10.2")
 
 
     implementation("io.ktor:ktor-server-content-negotiation:2.3.4")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.4")
     implementation("io.ktor:ktor-client-gson:2.3.4")
     implementation("io.ktor:ktor-serialization-gson:2.3.4")
     implementation("io.ktor:ktor-server-status-pages:2.3.4")
@@ -46,7 +46,6 @@ dependencies {
 
     //Injection Dependencies
     implementation("com.google.inject:guice:7.0.0")
-
     implementation("org.yaml:snakeyaml:2.2")
 
     // Unit testing
