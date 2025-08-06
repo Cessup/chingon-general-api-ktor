@@ -1,6 +1,6 @@
-package com.cessup.domain.usecases
+package com.cessup.domain.usecases.session
 
-import com.cessup.data.models.UserDetailsEntity
+import com.cessup.data.models.session.UserDetailsEntity
 import com.cessup.data.services.Encrypt
 import com.cessup.data.services.RegisterUserDetailsRequest
 import com.cessup.data.services.RegisterUserRequest
