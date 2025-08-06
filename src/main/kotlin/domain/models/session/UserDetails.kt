@@ -1,4 +1,4 @@
-package com.cessup.domain.models
+package com.cessup.domain.models.session
 
 /**
  * Represents a user.

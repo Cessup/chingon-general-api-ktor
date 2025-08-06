@@ -1,6 +1,6 @@
 package domain.models
 
-import com.cessup.domain.models.UserDetails
+import com.cessup.domain.models.session.UserDetails
 
 /**
  * Represents a user.

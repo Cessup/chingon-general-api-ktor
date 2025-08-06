@@ -1,4 +1,4 @@
-package com.cessup.domain.usecases
+package com.cessup.domain.usecases.session
 
 import com.cessup.domain.repositories.UserRepository
 import com.cessup.data.services.Encrypt

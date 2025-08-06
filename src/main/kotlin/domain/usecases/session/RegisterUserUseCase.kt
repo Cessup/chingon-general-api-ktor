@@ -1,7 +1,7 @@
-package com.cessup.domain.usecases
+package com.cessup.domain.usecases.session
 
-import com.cessup.data.models.UserDetailsEntity
-import com.cessup.data.models.UserEntity
+import com.cessup.data.models.session.UserDetailsEntity
+import com.cessup.data.models.session.UserEntity
 import com.cessup.domain.repositories.UserRepository
 import domain.models.User
 import com.cessup.data.services.Encrypt
