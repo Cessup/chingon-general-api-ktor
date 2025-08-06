@@ -1,11 +1,11 @@
 package com.cessup.data.services
 
-import com.cessup.domain.usecases.AuthenticateUseCase
-import com.cessup.domain.usecases.DeleteUserUseCase
-import com.cessup.domain.usecases.GetUserUseCase
-import com.cessup.domain.usecases.RegisterUserUseCase
-import com.cessup.domain.usecases.ResetPasswordUseCase
-import com.cessup.domain.usecases.UpdateUserDetailsUseCase
+import com.cessup.domain.usecases.session.AuthenticateUseCase
+import com.cessup.domain.usecases.session.DeleteUserUseCase
+import com.cessup.domain.usecases.session.GetUserUseCase
+import com.cessup.domain.usecases.session.RegisterUserUseCase
+import com.cessup.domain.usecases.session.ResetPasswordUseCase
+import com.cessup.domain.usecases.session.UpdateUserDetailsUseCase
 import io.ktor.http.*
 import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal

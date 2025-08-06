@@ -1,7 +1,7 @@
 package com.cessup.domain.repositories
 
-import com.cessup.data.models.UserDetailsEntity
-import com.cessup.data.models.UserEntity
+import com.cessup.data.models.session.UserDetailsEntity
+import com.cessup.data.models.session.UserEntity
 import domain.models.User
 import org.bson.types.ObjectId
 

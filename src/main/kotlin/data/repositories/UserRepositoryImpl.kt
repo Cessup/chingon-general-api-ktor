@@ -1,8 +1,8 @@
 package com.cessup.data.repositories
 
-import com.cessup.data.models.UserDetailsEntity
-import com.cessup.data.models.UserEntity
-import com.cessup.domain.models.UserDetails
+import com.cessup.data.models.session.UserDetailsEntity
+import com.cessup.data.models.session.UserEntity
+import com.cessup.domain.models.session.UserDetails
 import com.cessup.domain.repositories.UserRepository
 import com.google.inject.Inject
 import com.mongodb.client.model.Filters

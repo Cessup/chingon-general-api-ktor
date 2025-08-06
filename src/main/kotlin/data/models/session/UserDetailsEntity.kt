@@ -1,4 +1,4 @@
-package com.cessup.data.models
+package com.cessup.data.models.session
 
 import org.bson.codecs.pojo.annotations.BsonId
 import org.litote.kmongo.Id
