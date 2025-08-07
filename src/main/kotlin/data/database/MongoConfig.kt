@@ -18,11 +18,11 @@ import org.litote.kmongo.reactivestreams.KMongo
 
 class MongoConfig @Inject constructor(connectionString: String,
                                        userDBString: String,
-                                       storeDBString: String) {
+                                       productDBString: String) {
 
     private val client : CoroutineClient = KMongo.createClient(connectionString).coroutine
     private val userDB : CoroutineDatabase = client.getDatabase(userDBString)
-    private val storageDB : CoroutineDatabase = client.getDatabase(storeDBString)
+    private val productsDB : CoroutineDatabase = client.getDatabase(productDBString)
 
     /**
      * This function give a client from database
@@ -41,10 +41,10 @@ class MongoConfig @Inject constructor(connectionString: String,
 
     /**
      * This function give a collection from database
-     * Storage is an example of other collection
+     * Product is a collection from db
      *
      * @return [CoroutineDatabase] the object is a collection from database
      */
-    fun getStoreDB() : CoroutineDatabase = storageDB
+    fun getProductsDB() : CoroutineDatabase = productsDB
 
 }

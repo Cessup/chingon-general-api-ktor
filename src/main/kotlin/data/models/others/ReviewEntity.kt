@@ -1,6 +1,6 @@
 package com.cessup.data.models.others
 
-import com.cessup.data.models.UserEntity
+import com.cessup.data.models.session.UserEntity
 import org.bson.codecs.pojo.annotations.BsonId
 import org.litote.kmongo.Id
 
