@@ -1,8 +1,10 @@
 package com.cessup.di
 
 import com.cessup.data.database.MongoConfig
+import com.cessup.data.repositories.ProductRepositoryImpl
 import com.cessup.data.services.Encrypt
 import com.cessup.data.repositories.UserRepositoryImpl
+import com.cessup.domain.repositories.ProductRepository
 import com.cessup.domain.repositories.UserRepository
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
@@ -34,7 +36,7 @@ class AppModule() : AbstractModule() {
         return MongoConfig(
             custom["databaseUri"].toString(),
             custom["sessionDB"].toString(),
-            custom["storeDB"].toString()
+            custom["productsDB"].toString()
         )
     }
 
@@ -57,4 +59,15 @@ class AppModule() : AbstractModule() {
     @Provides @Singleton
     fun provideUserRepository(mongoConfig:MongoConfig): UserRepository =
         UserRepositoryImpl(mongoConfig.getUserDb() )
+
+    /**
+     * This function start to configure the framework
+     *
+     * @param MongoConfig the MongoConfig got configuration about database
+     *
+     * @return [UserRepository] the object to use the User Repository
+     */
+    @Provides @Singleton
+    fun provideProductRepository(mongoConfig:MongoConfig): ProductRepository =
+        ProductRepositoryImpl(mongoConfig.getProductsDB())
 }

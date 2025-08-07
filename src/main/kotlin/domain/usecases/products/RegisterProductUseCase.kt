@@ -5,6 +5,7 @@ import com.cessup.data.models.others.DimensionsEntity
 import com.cessup.data.models.others.ReviewEntity
 import com.cessup.data.models.products.ProductDetailsEntity
 import com.cessup.data.models.products.ProductEntity
+import com.cessup.data.models.session.UserEntity
 import com.cessup.data.services.Encrypt
 import com.cessup.data.services.RegisterProductRequest
 import com.cessup.domain.models.products.Product
@@ -13,6 +14,7 @@ import com.cessup.domain.repositories.UserRepository
 import com.google.inject.Inject
 import domain.models.User
 import org.litote.kmongo.newId
+import org.litote.kmongo.toId
 
 /**
  * Register of user in the system.
@@ -65,7 +67,7 @@ class RegisterProductUseCase @Inject constructor(private val productRepository: 
                 registerRequest.details.tags,
             ),
             registerRequest.reviews.map { reviewRequest->
-                ReviewEntity(newId(), newId(),reviewRequest.rating,reviewRequest.comment,reviewRequest.date)
+                ReviewEntity(newId(), reviewRequest.userId.toId<UserEntity>(),reviewRequest.rating,reviewRequest.comment,reviewRequest.date)
             }
         )
 

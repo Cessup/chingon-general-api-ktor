@@ -2,8 +2,14 @@ package com.cessup
 
 import com.cessup.data.exceptions.AuthorizationException
 import com.cessup.data.services.JwtProvider
+import com.cessup.data.services.productsRoutes
 import com.cessup.data.services.userRoutes
 import com.cessup.di.AppModule
+import com.cessup.domain.usecases.products.DeleteProductUseCase
+import com.cessup.domain.usecases.products.FindBySerialNumberUseCase
+import com.cessup.domain.usecases.products.RegisterProductUseCase
+import com.cessup.domain.usecases.products.UpdateDetailsProductUseCase
+import com.cessup.domain.usecases.products.UpdateProductUseCase
 import com.cessup.domain.usecases.session.AuthenticateUseCase
 import com.cessup.domain.usecases.session.DeleteUserUseCase
 import com.cessup.domain.usecases.session.GetUserUseCase
@@ -56,7 +62,14 @@ fun Application.module() {
     val updateUserDetails = injector.getInstance(UpdateUserDetailsUseCase::class.java)
     val deleteUser = injector.getInstance(DeleteUserUseCase::class.java)
 
+    val registerProduct = injector.getInstance(RegisterProductUseCase::class.java)
+    val findProduct = injector.getInstance(FindBySerialNumberUseCase::class.java)
+    val deleteProduct = injector.getInstance(DeleteProductUseCase::class.java)
+    val updateProduct = injector.getInstance(UpdateProductUseCase::class.java)
+    val updateProductDetails = injector.getInstance(UpdateDetailsProductUseCase::class.java)
+
     routing {
         userRoutes(register, authentication,resetPassword,getUser, updateUserDetails,deleteUser, jwt)
+        productsRoutes(registerProduct,findProduct,deleteProduct,updateProduct,updateProductDetails)
     }
 }
