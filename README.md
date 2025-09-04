@@ -20,10 +20,11 @@ if you need more information about it you can check the next link
 ## Features
 Here's a list of features included in this project:
 
-| Name                                                                                                                                      | Description                                                                                       |
-|-------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| [Session](https://www.postman.com/cessupx/cacao-workspace/folder/goo6ezk/session-services) | There are all services about session like sign in or sing up.                                     |
+| Name                                                                                        | Description                                                                                       |
+|---------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| [Session](https://www.postman.com/cessupx/cacao-workspace/folder/goo6ezk/session-services)  | There are all services about session like sign in or sing up.                                     |
 | [Product](https://www.postman.com/cessupx/cacao-workspace/folder/15fk1y4/products-services) | There are all services about products like insert, update, delete and every thing about products. |
+| [Eatable](https://www.postman.com/cessupx/cacao-workspace/folder/fjmlivp/eatable-services) | There are all services about eatable like drinks or meals.                                        |
 
 ## Building & Running
 
