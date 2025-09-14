@@ -1,8 +1,10 @@
-# cacao
+# chingon
 
-Cacao is a example of an e-commerce. It's API gives mobile applications all services in ktor by kotlin so that's the backend part. 
+Chingon is an e-commerce platform. Its API offers all the services for different things by  ktor.
 
-I'm still developing it so my idea is make a system by my knowledge because I wanted to show you how I can make any system. If any one needs it for consult that will a pleasure be reference.
+I'm still developing it, so my plan is to create a system based on my knowledge, as I wanted to show you how I can create any system. 
+
+If anyone needs help, I'd be happy to help.
 
 If you want to more information about me you can visit my website.
 - [cessup.com](https://www.cessup.com)
