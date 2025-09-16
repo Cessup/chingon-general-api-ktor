@@ -13,14 +13,12 @@ import com.mongodb.reactivestreams.client.MongoDatabase
  *     Cessup
  * @since 1.0
  */
-
 class MongoConfig( connectionString: String,
                                       val userDBString: String,
                                       val productDBString: String,
-                                      val eatableDBString: String
+                                      val eatableDBString: String,
+                                      val salesDBString: String
     ) {
-
-
 
     val mongoClient: MongoClient = MongoClients.create(connectionString)
     /**
@@ -41,5 +39,12 @@ class MongoConfig( connectionString: String,
      */
     val eatableDB: MongoDatabase
         get()= mongoClient.getDatabase(eatableDBString)
+
+    /**
+     * This function give a database
+     * Sales is a database
+     */
+    val salesDB: MongoDatabase
+        get()= mongoClient.getDatabase(salesDBString)
 
 }
