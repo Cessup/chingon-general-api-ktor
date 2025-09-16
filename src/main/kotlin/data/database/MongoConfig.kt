@@ -21,6 +21,7 @@ class MongoConfig @Inject constructor(connectionString: String,
                                        productDBString: String,
                                        drinkDBString: String,
                                        mealDBString: String,
+                                       salesDBString: String
     ) {
 
     private val client : CoroutineClient = KMongo.createClient(connectionString).coroutine
@@ -28,6 +29,7 @@ class MongoConfig @Inject constructor(connectionString: String,
     private val productsDB : CoroutineDatabase = client.getDatabase(productDBString)
     private val drinkDB : CoroutineDatabase = client.getDatabase(drinkDBString)
     private val mealDB : CoroutineDatabase = client.getDatabase(mealDBString)
+    private val salesDB : CoroutineDatabase = client.getDatabase(salesDBString)
 
     /**
      * This function give a collection from database
@@ -60,5 +62,13 @@ class MongoConfig @Inject constructor(connectionString: String,
      * @return [CoroutineDatabase] the object is a collection from database
      */
     fun getMealDB() : CoroutineDatabase = mealDB
+
+    /**
+     * This function give a database
+     * Sales is a database
+     *
+     * @return [CoroutineDatabase] the object is a collection from database
+     */
+    fun getSalesDB() : CoroutineDatabase = salesDB
 
 }
