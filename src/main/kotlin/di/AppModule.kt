@@ -39,7 +39,8 @@ class AppModule() : AbstractModule() {
             custom["databaseUri"].toString(),
             custom["sessionDB"].toString(),
             custom["productDB"].toString(),
-            custom["eatableDB"].toString()
+            custom["eatableDB"].toString(),
+            custom["salesDB"].toString()
         )
     }
 

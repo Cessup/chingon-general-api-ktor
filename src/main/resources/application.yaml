@@ -15,3 +15,4 @@ ktor:
         productDB : "product_db"
         productDetailDB : "product_detail_db"
         eatableDB : "eatable_db"
+        salesDB: "sales_db"
