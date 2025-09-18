@@ -1,27 +1,17 @@
 package com.cessup.domain.usecases.products
 
-import com.cessup.data.models.others.ColorEntity
-import com.cessup.data.models.others.DimensionsEntity
-import com.cessup.data.models.others.ReviewEntity
-import com.cessup.data.models.products.ProductDetailsEntity
-import com.cessup.data.models.products.ProductEntity
-import com.cessup.data.models.session.UserEntity
 import com.cessup.data.services.Encrypt
-import com.cessup.data.services.RegisterProductRequest
 import com.cessup.domain.models.products.Product
 import com.cessup.domain.repositories.ProductRepository
-import com.cessup.domain.repositories.UserRepository
 import com.google.inject.Inject
 import domain.models.User
-import org.litote.kmongo.newId
-import org.litote.kmongo.toId
 
 /**
  * Register of user in the system.
  *
  * This class make register of user information such as name, email, and age.
  *
- * @constructor Receiver a [UserRepository] and a [Encrypt] object because use it to origin data.
+ * @constructor Receiver a [ProductRepository] and a [Encrypt] object because use it to origin data.
  * @author
  *     Cessup
  * @since 1.0
@@ -31,46 +21,11 @@ class RegisterProductUseCase @Inject constructor(private val productRepository: 
     /**
      * Returns new product.
      *
-     * @param RegisterProductRequest this object got information about the account like email,phoneNumber,nickname,password, etc.
+     * @param Product this object got information about it.
      * @return A new [User] from the previously entered credentials
      */
-    suspend fun execute(registerRequest: RegisterProductRequest): Product? {
-        productRepository.findProductBySerialNumber(registerRequest.serialNumber)?.let { throw IllegalArgumentException("Email already in use") }
-
-        val productEntity = ProductEntity(
-            newId(),
-            registerRequest.serialNumber,
-            registerRequest.price,
-            registerRequest.currency,
-            registerRequest.category,
-            registerRequest.subcategory,
-            registerRequest.stock,
-            registerRequest.rating,
-            ProductDetailsEntity(
-                newId(),
-                registerRequest.details.name,
-                registerRequest.details.description,
-                registerRequest.details.model,
-                registerRequest.details.version,
-                registerRequest.details.brand,
-                DimensionsEntity(
-                    newId(),
-                    registerRequest.details.dimensions.width,
-                    registerRequest.details.dimensions.height,
-                    registerRequest.details.dimensions.depth
-                ),
-                ColorEntity(
-                    newId(),
-                    registerRequest.details.color.code,
-                    registerRequest.details.color.name
-                ),
-                registerRequest.details.tags,
-            ),
-            registerRequest.reviews.map { reviewRequest->
-                ReviewEntity(newId(), reviewRequest.userId.toId<UserEntity>(),reviewRequest.rating,reviewRequest.comment,reviewRequest.date)
-            }
-        )
-
-        return productRepository.insertProduct(productEntity)
+    suspend fun execute(product: Product): Boolean? {
+        productRepository.findProductBySerialNumber(product.serialNumber)?.let { throw IllegalArgumentException("Serial Number already in use") }
+        return productRepository.insertProduct(product)
     }
 }

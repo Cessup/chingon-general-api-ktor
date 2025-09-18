@@ -19,15 +19,13 @@ import org.litote.kmongo.reactivestreams.KMongo
 class MongoConfig @Inject constructor(connectionString: String,
                                        userDBString: String,
                                        productDBString: String,
-                                       drinkDBString: String,
-                                       mealDBString: String,
+                                       eatableDBString: String
     ) {
 
     private val client : CoroutineClient = KMongo.createClient(connectionString).coroutine
     private val userDB : CoroutineDatabase = client.getDatabase(userDBString)
     private val productsDB : CoroutineDatabase = client.getDatabase(productDBString)
-    private val drinkDB : CoroutineDatabase = client.getDatabase(drinkDBString)
-    private val mealDB : CoroutineDatabase = client.getDatabase(mealDBString)
+    private val eatableDB : CoroutineDatabase = client.getDatabase(eatableDBString)
 
     /**
      * This function give a collection from database
@@ -51,14 +49,7 @@ class MongoConfig @Inject constructor(connectionString: String,
      *
      * @return [CoroutineDatabase] the object is a collection from database
      */
-    fun getDrinkDB() : CoroutineDatabase = drinkDB
+    fun getEatableDB() : CoroutineDatabase = eatableDB
 
-    /**
-     * This function give a database
-     * Meal is a database
-     *
-     * @return [CoroutineDatabase] the object is a collection from database
-     */
-    fun getMealDB() : CoroutineDatabase = mealDB
 
 }

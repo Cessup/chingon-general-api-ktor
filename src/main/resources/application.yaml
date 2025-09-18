@@ -12,6 +12,6 @@ ktor:
     mongodb:
         databaseUri: "mongodb://localhost:27017"
         sessionDB: "session_db"
-        storeDB : "store_db"
-        drinkDB : "drinks_db"
-        mealDB : "meals_db"
+        productDB : "product_db"
+        productDetailDB : "product_detail_db"
+        eatableDB : "eatable_db"
