@@ -1,15 +1,14 @@
 package com.cessup.domain.repositories
 
-import com.cessup.data.models.products.ProductDetailsEntity
-import com.cessup.data.models.products.ProductEntity
 import com.cessup.domain.models.products.Product
+import com.cessup.domain.models.products.ProductDetails
 import org.bson.types.ObjectId
 
 /**
  * Product Repository have every data about the products.
  *
- * This class is a interface with all functions about user information
- * There are actions that the user can perform
+ * This class is a interface with all functions about product information
+ * There are actions that the product can perform
  *
  * @author
  *     Cessup
@@ -19,26 +18,26 @@ interface ProductRepository {
     /**
      * This function insert a new product in the database
      *
-     * @param productEntity the user information from the services is here
+     * @param product the user information from the services is here
      * @return a user
      */
-    suspend fun insertProduct(productEntity: ProductEntity): Product
+    suspend fun insertProduct(product: Product): Boolean
 
     /**
      * This function update a product in the database
      *
-     * @param productEntity the user information from the services is here
+     * @param product the user information from the services is here
      * @return a user
      */
-    suspend fun updateProduct(productEntity: ProductEntity): Boolean
+    suspend fun updateProduct(product: Product): Boolean
 
     /**
      * The system can update the product details data to the product
      *
-     * @param productDetailsEntity the email is a filter to search the user in database
+     * @param productDetails email is a filter to search the user in database
      * @return a Boolean
      */
-    suspend fun updateProductDetails(productDetailsEntity: ProductDetailsEntity): Boolean
+    suspend fun updateProductDetails(productDetails: ProductDetails): Boolean
 
     /**
      * This function delete a product in the database

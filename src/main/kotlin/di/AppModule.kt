@@ -1,15 +1,13 @@
 package com.cessup.di
 
 import com.cessup.data.database.MongoConfig
-import com.cessup.data.repositories.DrinkRepositoryImpl
-import com.cessup.data.repositories.MealRepositoryImpl
+import com.cessup.data.repositories.EatableRepositoryImpl
 import com.cessup.data.repositories.ProductRepositoryImpl
 import com.cessup.data.services.Encrypt
 import com.cessup.data.repositories.UserRepositoryImpl
+import com.cessup.domain.repositories.EatableRepository
 import com.cessup.domain.repositories.ProductRepository
 import com.cessup.domain.repositories.UserRepository
-import com.cessup.domain.repositories.eatable.DrinkRepository
-import com.cessup.domain.repositories.eatable.MealRepository
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
 import com.google.inject.Singleton
@@ -40,9 +38,8 @@ class AppModule() : AbstractModule() {
         return MongoConfig(
             custom["databaseUri"].toString(),
             custom["sessionDB"].toString(),
-            custom["productsDB"].toString(),
-            custom["drinkDB"].toString(),
-            custom["mealDB"].toString()
+            custom["productDB"].toString(),
+            custom["eatableDB"].toString()
         )
     }
 
@@ -85,17 +82,6 @@ class AppModule() : AbstractModule() {
      * @return [UserRepository] the object to use the User Repository
      */
     @Provides @Singleton
-    fun provideDrinkRepository(mongoConfig:MongoConfig): DrinkRepository =
-        DrinkRepositoryImpl(mongoConfig.getDrinkDB())
-
-    /**
-     * This function start to configure the framework
-     *
-     * @param MongoConfig the MongoConfig got configuration about database
-     *
-     * @return [UserRepository] the object to use the User Repository
-     */
-    @Provides @Singleton
-    fun provideMealRepository(mongoConfig:MongoConfig): MealRepository =
-        MealRepositoryImpl(mongoConfig.getMealDB())
+    fun provideDrinkRepository(mongoConfig:MongoConfig): EatableRepository =
+        EatableRepositoryImpl(mongoConfig.getEatableDB())
 }

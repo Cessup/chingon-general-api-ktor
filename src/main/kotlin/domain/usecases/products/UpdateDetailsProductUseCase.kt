@@ -1,13 +1,9 @@
 package com.cessup.domain.usecases.products
 
-import com.cessup.data.models.others.ColorEntity
-import com.cessup.data.models.others.DimensionsEntity
-import com.cessup.data.models.products.ProductDetailsEntity
 import com.cessup.data.services.Encrypt
-import com.cessup.data.services.RegisterProductDetailsRequest
+import com.cessup.domain.models.products.ProductDetails
 import com.cessup.domain.repositories.ProductRepository
 import com.google.inject.Inject
-import org.litote.kmongo.newId
 
 /**
  * Update of product details by id of the product in the system.
@@ -24,32 +20,10 @@ class UpdateDetailsProductUseCase @Inject constructor(private val productReposit
     /**
      * Update a product.
      *
-     * @param RegisterProductDetailsRequest this object got information about the product.
+     * @param ProductDetails this object got information about the product.
      * @return A [Boolean] that is the result about operation.
      */
-    suspend fun execute(registerRequest: RegisterProductDetailsRequest, id: String): Boolean {
-
-        val productDetailsEntity = ProductDetailsEntity(
-            newId(),
-            registerRequest.name,
-            registerRequest.description,
-            registerRequest.model,
-            registerRequest.version,
-            registerRequest.brand,
-            DimensionsEntity(
-                newId(),
-                registerRequest.dimensions.width,
-                registerRequest.dimensions.height,
-                registerRequest.dimensions.depth
-            ),
-            ColorEntity(
-                newId(),
-                registerRequest.color.code,
-                registerRequest.color.name
-            ),
-            registerRequest.tags,
-        )
-
-        return productRepository.updateProductDetails(productDetailsEntity)
+    suspend fun execute(productDetails: ProductDetails): Boolean {
+        return productRepository.updateProductDetails(productDetails)
     }
 }

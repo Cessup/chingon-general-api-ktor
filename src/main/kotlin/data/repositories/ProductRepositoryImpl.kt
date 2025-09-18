@@ -1,10 +1,9 @@
 package com.cessup.data.repositories
 
+import com.cessup.data.models.others.ColorEntity
+import com.cessup.data.models.others.DimensionsEntity
 import com.cessup.data.models.products.ProductDetailsEntity
 import com.cessup.data.models.products.ProductEntity
-import com.cessup.domain.models.others.Color
-import com.cessup.domain.models.others.Dimensions
-import com.cessup.domain.models.others.Review
 import com.cessup.domain.models.products.Product
 import com.cessup.domain.models.products.ProductDetails
 import com.cessup.domain.repositories.ProductRepository
@@ -14,8 +13,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.bson.types.ObjectId
 import org.litote.kmongo.coroutine.CoroutineDatabase
-import org.litote.kmongo.div
-import org.litote.kmongo.setValue
+import org.litote.kmongo.eq
+import org.litote.kmongo.id.toId
+import org.litote.kmongo.newId
 
 /**
  * Product Repository have every data about the products.
@@ -37,70 +37,91 @@ class ProductRepositoryImpl @Inject constructor(database: CoroutineDatabase) : P
     /**
      * This function insert a new product in the database
      *
-     * @param productEntity the user information from the services is here
+     * @param product the user information from the services is here
      * @return a user
      */
-    override suspend fun insertProduct(productEntity: ProductEntity): Product = withContext(Dispatchers.IO) {
-        products.insertOne(productEntity)
-
-        Product(productEntity.id.toString(),
-            productEntity.serialNumber,
-            productEntity.price,
-            productEntity.currency,
-            productEntity.category,
-            productEntity.subcategory,
-            productEntity.stock,
-            productEntity.rating,
-            ProductDetails(
-                productEntity.details.id.toString(),
-                productEntity.details.name,
-                productEntity.details.description,
-                productEntity.details.model,
-                productEntity.details.version,
-                productEntity.details.brand,
-                Dimensions(
-                    productEntity.details.dimensions.id.toString(),
-                    productEntity.details.dimensions.width,
-                    productEntity.details.dimensions.height,
-                    productEntity.details.dimensions.depth
-                ),
-                Color(
-                    productEntity.details.color.id.toString(),
-                    productEntity.details.color.code,
-                    productEntity.details.color.name
-                ),
-                productEntity.details.tags
-            ),
-            productEntity.reviews.map { reviewEntity ->
-                Review(reviewEntity.id.toString(),reviewEntity.userId.toString(),reviewEntity.rating,reviewEntity.comment,reviewEntity.date)
-            }
+    override suspend fun insertProduct(product: Product): Boolean = withContext(Dispatchers.IO) {
+        val productEntity = ProductEntity(
+            newId(),
+            product.serialNumber,
+            product.category,
+            product.subcategory,
+            product.stock,
+            product.name,
+            product.img,
+            product.rating,
+            ObjectId(product.idBrand),
+            ObjectId(product.idDetails)
         )
 
+        try {
+            products.insertOne(productEntity)
+            true
+        } catch (_: Exception) {
+            false
+        }
     }
 
     /**
      * This function update a product in the database
      *
-     * @param productEntity the user information from the services is here
+     * @param product the user information from the services is here
      * @return a user
      */
-    override suspend fun updateProduct(productEntity: ProductEntity): Boolean = withContext(Dispatchers.IO) {
-        val filter = Filters.eq((ProductEntity::id).toString(), ObjectId(productEntity.id.toString()))
-        val update = setValue(ProductEntity::id, productEntity.id)
-        val updateResult = products.updateOne(filter,update)
+    override suspend fun updateProduct(product: Product): Boolean = withContext(Dispatchers.IO) {
+        val productEntity = ProductEntity(
+            ObjectId(product.id).toId(),
+            product.serialNumber,
+            product.category,
+            product.subcategory,
+            product.stock,
+            product.name,
+            product.img,
+            product.rating,
+            ObjectId(product.idBrand),
+            ObjectId(product.idDetails)
+        )
+
+        val updateResult = products.updateOne(
+            ProductEntity::id eq productEntity.id,
+            productEntity
+        )
+
         updateResult.matchedCount > 0 && updateResult.modifiedCount > 0
     }
+
+    private val productsDetails = database.getCollection< ProductDetailsEntity>("products_details")
 
     /**
      * The system can update the product details data to the product
      *
-     * @param productDetailsEntity the email is a filter to search the user in database
+     * @param productDetails the email is a filter to search the user in database
      * @return a Boolean
      */
-    override suspend fun updateProductDetails(productDetailsEntity: ProductDetailsEntity): Boolean = withContext(Dispatchers.IO) {
-        val filter = Filters.eq((ProductEntity::details / ProductDetailsEntity::id).toString(), ObjectId(productDetailsEntity.id.toString()))
-        val update = setValue(ProductEntity::details, productDetailsEntity)
-        val updateResult = products.updateOne(filter,update)
+    override suspend fun updateProductDetails(productDetails: ProductDetails): Boolean = withContext(Dispatchers.IO) {
+        val productDetailsEntity = ProductDetailsEntity(
+            ObjectId(productDetails.id).toId(),
+            productDetails.description,
+            productDetails.version,
+            DimensionsEntity(
+                ObjectId(productDetails.dimensions.id).toId(),
+                productDetails.dimensions.width,
+                productDetails.dimensions.height,
+                productDetails.dimensions.depth
+            ),
+            ColorEntity(
+                    ObjectId(productDetails.color.id).toId(),
+                productDetails.color.code,
+                productDetails.color.name
+            ),
+            productDetails.tags
+        )
+
+        val updateResult = productsDetails.updateOne(
+            ProductDetailsEntity::id eq productDetailsEntity.id,
+            productDetailsEntity
+        )
+
         updateResult.matchedCount > 0 && updateResult.modifiedCount > 0
     }
 
@@ -123,38 +144,18 @@ class ProductRepositoryImpl @Inject constructor(database: CoroutineDatabase) : P
      */
     override suspend fun findProductById(id: ObjectId): Product? =
         products.findOneById(id)
-            ?.let {
-                Product(it.id.toString(),
-                    it.serialNumber,
-                    it.price,
-                    it.currency,
-                    it.category,
-                    it.subcategory,
-                    it.stock,
-                    it.rating,
-                    ProductDetails(
-                        it.details.id.toString(),
-                        it.details.name,
-                        it.details.description,
-                        it.details.model,
-                        it.details.version,
-                        it.details.brand,
-                        Dimensions(
-                            it.details.dimensions.id.toString(),
-                            it.details.dimensions.width,
-                            it.details.dimensions.height,
-                            it.details.dimensions.depth
-                        ),
-                        Color(
-                            it.details.color.id.toString(),
-                            it.details.color.code,
-                            it.details.color.name
-                        ),
-                        it.details.tags
-                    ),
-                    it.reviews.map { reviewEntity ->
-                        Review(reviewEntity.id.toString(), reviewEntity.userId.toString(),reviewEntity.rating,reviewEntity.comment,reviewEntity.date)
-                    }
+            ?.let { product->
+                Product(
+                    product.id.toString(),
+                    product.serialNumber,
+                    product.category,
+                    product.subcategory,
+                    product.stock,
+                    product.name,
+                    product.img,
+                    product.rating,
+                    product.idBrand.toString(),
+                    product.idDetails.toString()
                 )
             }
 
@@ -169,38 +170,18 @@ class ProductRepositoryImpl @Inject constructor(database: CoroutineDatabase) : P
 
        return  products.find(filter)
             .let {
-                it.first()?.let {
-                    Product(it.id.toString(),
-                        it.serialNumber,
-                        it.price,
-                        it.currency,
-                        it.category,
-                        it.subcategory,
-                        it.stock,
-                        it.rating,
-                        ProductDetails(
-                            it.details.id.toString(),
-                            it.details.name,
-                            it.details.description,
-                            it.details.model,
-                            it.details.version,
-                            it.details.brand,
-                            Dimensions(
-                                it.details.dimensions.id.toString(),
-                                it.details.dimensions.width,
-                                it.details.dimensions.height,
-                                it.details.dimensions.depth
-                            ),
-                            Color(
-                                it.details.color.id.toString(),
-                                it.details.color.code,
-                                it.details.color.name
-                            ),
-                            it.details.tags
-                        ),
-                        it.reviews.map { reviewEntity ->
-                            Review(reviewEntity.id.toString(), reviewEntity.userId.toString(),reviewEntity.rating,reviewEntity.comment,reviewEntity.date)
-                        }
+                it.first()?.let { product->
+                    Product(
+                        product.id.toString(),
+                        product.serialNumber,
+                        product.category,
+                        product.subcategory,
+                        product.stock,
+                        product.name,
+                        product.img,
+                        product.rating,
+                        product.idBrand.toString(),
+                        product.idDetails.toString()
                     )
                 }
 
