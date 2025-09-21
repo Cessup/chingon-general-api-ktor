@@ -1,14 +1,21 @@
-# chingon
+# Chingon Server
 
-Chingon is an e-commerce platform. Its API offers all the services for different things by  ktor.
+[![License](https://img.shields.io/github/license/Cessup/chingon-general-api-ktor
+)](https://opensource.org/licenses/Apache-2.0)
 
-I'm still developing it, so my plan is to create a system based on my knowledge, as I wanted to show you how I can create any system. 
+Chingon is an e-commerce platform. It's an API to different application that contain features to help you for make any applications.
 
-If anyone needs help, I'd be happy to help.
 
-If you want to more information about me you can visit my website.
-- [cessup.com](https://www.cessup.com)
 
+> The project is also available [here](https://github.com/Cessup/chingon-general-api-ktor).
+>
+> The [`develop` branch](https://github.com/Cessup/chingon-general-api-ktor) showcase a stable version.
+>
+
+>I'm still developing it, so my plan is to create a system based on my knowledge, as I wanted to show you how I can create any system.
+>If anyone needs help, I'd be happy to help.
+>If you want to more information about me you can visit my website.
+>- [cessup.com](https://www.cessup.com)
 
 
 
@@ -22,11 +29,31 @@ if you need more information about it you can check the next link
 ## Features
 Here's a list of features included in this project:
 
-| Name                                                                                        | Description                                                                                       |
-|---------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| [Session](https://www.postman.com/cessupx/cacao-workspace/folder/goo6ezk/session-services)  | There are all services about session like sign in or sing up.                                     |
-| [Product](https://www.postman.com/cessupx/cacao-workspace/folder/15fk1y4/products-services) | There are all services about products like insert, update, delete and every thing about products. |
-| [Eatable](https://www.postman.com/cessupx/cacao-workspace/folder/fjmlivp/eatable-services) | There are all services about eatable like drinks or meals.                                        |
+| Name                                                                                        | Description                                                                                           |
+|---------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| [Session](https://www.postman.com/cessupx/cacao-workspace/folder/goo6ezk/session-services)  | There are all services about session like sign in or sing up.                                         |
+| [Product](https://www.postman.com/cessupx/cacao-workspace/folder/15fk1y4/products-services) | There are all services about products like insert, update, delete and every thing about products.     |
+| [Eatable](https://www.postman.com/cessupx/cacao-workspace/folder/fjmlivp/eatable-services)  | There are all services about eatable like drinks or meals.                                            |
+| [Sales](https://www.postman.com/cessupx/cacao-workspace/)                                   | There are all services about sales like price or promotion. (It is in progress to do)                 |
+| [Payments](https://www.postman.com/cessupx/cacao-workspace/)                                | There are all services about payments like communication with the bank. (It is in progress to do)     |
+| [Delivery](https://www.postman.com/cessupx/cacao-workspace/)                                | There are all services about delivery like pick-up, on the way and delivery.(It is in progress to do) |
+
+## How to use it
+
+If you want to use it you should check the next link because there is a workspace with all services by Postman.
+
+- [Workspace](https://www.postman.com/cessupx/cacao-workspace/overview)
+
+## Technologies
+
+The app uses the following multiplatform dependencies in its implementation:
+
+- [Ktor](https://ktor.io/) for networking
+- [Guice](https://github.com/google/guice/wiki/gettingstarted) for dependency injection
+- [Kmongo](https://litote.org/kmongo/) for dependency injection but it will migrate to MongoDB Kotlin Driver because it is deprecate.
+
+> The libraries are going to update when any project will absolute but before data we'll notify you. But you are free to use anything libraries in thins project because that is just a example.
+
 
 ## Building & Running
 
@@ -52,8 +79,3 @@ If the server starts successfully, you'll see the following output:
 2025-07-22 17:10:27.921 [DefaultDispatcher-worker-1] INFO  Application - Responding at http://0.0.0.0:8080
 ```
 
-## Use
-
-If you want to use it you should check the next link because there is a workspace with all services by Postman.
-
-- [Workspace](https://www.postman.com/cessupx/cacao-workspace/overview)
