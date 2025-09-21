@@ -1,4 +1,4 @@
-name: Ktor CI
+name: Chingon API CI
 
 on:
   push:
