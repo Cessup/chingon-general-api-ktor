@@ -5,7 +5,7 @@ import com.google.inject.Inject
 import org.bson.types.ObjectId
 
 /**
- * Delete Price for a thing.
+ * Delete Sale for a thing.
  *
  * This class delete price for all a things to sale
  *

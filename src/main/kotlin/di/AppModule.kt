@@ -3,10 +3,12 @@ package com.cessup.di
 import com.cessup.data.database.MongoConfig
 import com.cessup.data.repositories.EatableRepositoryImpl
 import com.cessup.data.repositories.ProductRepositoryImpl
+import com.cessup.data.repositories.SalesRepositoryImpl
 import com.cessup.data.services.Encrypt
 import com.cessup.data.repositories.UserRepositoryImpl
 import com.cessup.domain.repositories.EatableRepository
 import com.cessup.domain.repositories.ProductRepository
+import com.cessup.domain.repositories.SalesRepository
 import com.cessup.domain.repositories.UserRepository
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
@@ -85,4 +87,15 @@ class AppModule() : AbstractModule() {
     @Provides @Singleton
     fun provideDrinkRepository(mongoConfig:MongoConfig): EatableRepository =
         EatableRepositoryImpl(mongoConfig.getEatableDB())
+
+    /**
+     * This function start to configure the framework
+     *
+     * @param MongoConfig the MongoConfig got configuration about database
+     *
+     * @return [SalesRepository] the object to use the Sales Repository
+     */
+    @Provides @Singleton
+    fun provideSaleRepository(mongoConfig:MongoConfig): SalesRepository =
+        SalesRepositoryImpl(mongoConfig.getEatableDB())
 }

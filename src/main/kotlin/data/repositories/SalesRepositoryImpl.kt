@@ -1,10 +1,10 @@
 package com.cessup.data.repositories
 
 import com.cessup.data.models.sales.MerchantEntity
-import com.cessup.data.models.sales.PriceEntity
+import com.cessup.data.models.sales.SaleEntity
 import com.cessup.data.models.sales.PromotionEntity
 import com.cessup.domain.models.sales.Merchant
-import com.cessup.domain.models.sales.Price
+import com.cessup.domain.models.sales.Sale
 import com.cessup.domain.models.sales.Promotion
 import com.cessup.domain.repositories.SalesRepository
 import com.google.inject.Inject
@@ -27,52 +27,52 @@ import org.litote.kmongo.toId
  * @since 1.0
  */
 class SalesRepositoryImpl@Inject constructor(database: CoroutineDatabase) : SalesRepository {
-    private val saleCollection = database.getCollection<PriceEntity>("sales")
+    private val saleCollection = database.getCollection<SaleEntity>("sales")
 
     /**
-     * This function insert a new price in the database
+     * This function insert a new sale in the database
      *
-     * @param price the price is the object with information for sale
+     * @param sale the sale is the object with information for sale
      * @return a user
      */
-    override suspend fun insertPrice(price: Price): Boolean = withContext(Dispatchers.IO) {
-        val priceEntity = PriceEntity(
+    override suspend fun insertPrice(sale: Sale): Boolean = withContext(Dispatchers.IO) {
+        val saleEntity = SaleEntity(
             newId(),
-            price.mount,
-            price.currency,
+            sale.mount,
+            sale.currency,
             MerchantEntity(
-                price.merchant.id.toId(),
-                price.merchant.name
-            ),
-            price.item
+                sale.merchant.id.toId(),
+                sale.merchant.name,
+                sale.merchant.img
+            )
         )
         try {
-            saleCollection.insertOne(priceEntity)
+            saleCollection.insertOne(saleEntity)
             true
         } catch (_: Exception) {
             false
         }
     }
     /**
-     * This function update a price object in the database
+     * This function update a sale object in the database
      *
-     * @param price the price is the object with information for sale
+     * @param sale the sale is the object with information for sale
      * @return a Boolean this is the result
      */
-    override suspend fun updatePrice(price: Price): Boolean = withContext(Dispatchers.IO) {
-        val priceEntity = PriceEntity(
+    override suspend fun updatePrice(sale: Sale): Boolean = withContext(Dispatchers.IO) {
+        val saleEntity = SaleEntity(
             newId(),
-            price.mount,
-            price.currency,
+            sale.mount,
+            sale.currency,
             MerchantEntity(
-                price.merchant.id.toId(),
-                price.merchant.name
-            ),
-            price.item
+                sale.merchant.id.toId(),
+                sale.merchant.name,
+                sale.merchant.img
+            )
         )
         val updateResult = saleCollection.replaceOne(
-            PriceEntity::id eq priceEntity.id,
-            priceEntity
+            SaleEntity::id eq saleEntity.id,
+            saleEntity
         )
 
         updateResult.matchedCount > 0 && updateResult.modifiedCount > 0
@@ -92,17 +92,17 @@ class SalesRepositoryImpl@Inject constructor(database: CoroutineDatabase) : Sale
      *
      * @return a List of Prices
      */
-    override suspend fun getPrices(): List<Price> = saleCollection.find().toList().let {
-        it.map { priceEntities ->
-            Price(
-                priceEntities.id.toString(),
-                priceEntities.mount,
-                priceEntities.currency,
+    override suspend fun getPrices(): List<Sale> = saleCollection.find().toList().let {
+        it.map { saleEntity ->
+            Sale(
+                saleEntity.id.toString(),
+                saleEntity.mount,
+                saleEntity.currency,
                 Merchant(
-                    priceEntities.merchant.id.toString(),
-                    priceEntities.merchant.name
-                ),
-                priceEntities.item
+                    saleEntity.merchant.id.toString(),
+                    saleEntity.merchant.name,
+                    saleEntity.merchant.img
+                )
             )
         }
     }
@@ -124,7 +124,8 @@ class SalesRepositoryImpl@Inject constructor(database: CoroutineDatabase) : Sale
             promotion.expiration,
             MerchantEntity(
                 promotion.merchant.id.toId(),
-                promotion.merchant.name
+                promotion.merchant.name,
+                promotion.merchant.img
             ),
         )
         try {
@@ -149,7 +150,8 @@ class SalesRepositoryImpl@Inject constructor(database: CoroutineDatabase) : Sale
             promotion.expiration,
             MerchantEntity(
                 promotion.merchant.id.toId(),
-                promotion.merchant.name
+                promotion.merchant.name,
+                promotion.merchant.img
             ),
         )
 
@@ -185,7 +187,8 @@ class SalesRepositoryImpl@Inject constructor(database: CoroutineDatabase) : Sale
             it.expiration,
             Merchant(
                 it.merchant.id.toString(),
-                it.merchant.name
+                it.merchant.name,
+                it.merchant.img
             )
         )
     }
@@ -205,7 +208,8 @@ class SalesRepositoryImpl@Inject constructor(database: CoroutineDatabase) : Sale
                 promotionEntity.expiration,
                 Merchant(
                     promotionEntity.merchant.id.toString(),
-                    promotionEntity.merchant.name
+                    promotionEntity.merchant.name,
+                    promotionEntity.merchant.img
                 )
             )
         }

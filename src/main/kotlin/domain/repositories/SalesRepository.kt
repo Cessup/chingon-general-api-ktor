@@ -1,6 +1,6 @@
 package com.cessup.domain.repositories
 
-import com.cessup.domain.models.sales.Price
+import com.cessup.domain.models.sales.Sale
 import com.cessup.domain.models.sales.Promotion
 import org.bson.types.ObjectId
 
@@ -16,19 +16,19 @@ import org.bson.types.ObjectId
  */
 interface SalesRepository {
     /**
-     * This function insert a new price in the database
+     * This function insert a new sale in the database
      *
-     * @param price the price is the object with information for sale
+     * @param sale the sale is the object with information for sale
      * @return a user
      */
-    suspend fun insertPrice(price: Price) : Boolean
+    suspend fun insertPrice(sale: Sale) : Boolean
     /**
-     * This function update a price object in the database
+     * This function update a sale object in the database
      *
-     * @param price the price is the object with information for sale
+     * @param sale the sale is the object with information for sale
      * @return a Boolean this is the result
      */
-    suspend fun updatePrice(price: Price) : Boolean
+    suspend fun updatePrice(sale: Sale) : Boolean
     /**
      * This function delete a price object in the database
      *
@@ -41,7 +41,7 @@ interface SalesRepository {
      *
      * @return a List of Prices
      */
-    suspend fun getPrices() : List<Price>
+    suspend fun getPrices() : List<Sale>
     /**
      * This function insert a new promotion in the database
      *

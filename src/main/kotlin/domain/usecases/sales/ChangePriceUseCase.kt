@@ -1,11 +1,11 @@
 package com.cessup.domain.usecases.sales
 
-import com.cessup.domain.models.sales.Price
+import com.cessup.domain.models.sales.Sale
 import com.cessup.domain.repositories.SalesRepository
 import com.google.inject.Inject
 
 /**
- * Change of Price for anything.
+ * Change of Sale for anything.
  *
  * This class change price for all things to sale
  *
@@ -16,10 +16,10 @@ import com.google.inject.Inject
  */
 class ChangePriceUseCase@Inject constructor(private val salesRepository: SalesRepository) {
     /**
-     * Update a price.
+     * Update a sale.
      *
-     * @param price this object got information about the price.
+     * @param sale this object got information about the sale.
      * @return A [Boolean] that is the result about operation.
      */
-    suspend fun execute(price: Price): Boolean = salesRepository.updatePrice(price)
+    suspend fun execute(sale: Sale): Boolean = salesRepository.updatePrice(sale)
 }

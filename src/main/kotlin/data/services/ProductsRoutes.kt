@@ -4,6 +4,7 @@ import com.cessup.domain.models.products.Product
 import com.cessup.domain.models.products.ProductDetails
 import com.cessup.domain.usecases.products.DeleteProductUseCase
 import com.cessup.domain.usecases.products.FindBySerialNumberUseCase
+import com.cessup.domain.usecases.products.GetProductsListUseCase
 import com.cessup.domain.usecases.products.RegisterProductUseCase
 import com.cessup.domain.usecases.products.UpdateDetailsProductUseCase
 import com.cessup.domain.usecases.products.UpdateProductUseCase
@@ -32,6 +33,7 @@ import io.ktor.server.routing.route
  */
 fun Route.productsRoutes(registerProductUseCase: RegisterProductUseCase,
                          findBySerialNumberUseCase:FindBySerialNumberUseCase,
+                         findProductsListUseCase: GetProductsListUseCase,
                          deleteProductUseCase:DeleteProductUseCase,
                          updateProductUseCase:UpdateProductUseCase,
                          updateDetailsProductUseCase:UpdateDetailsProductUseCase
@@ -48,7 +50,7 @@ fun Route.productsRoutes(registerProductUseCase: RegisterProductUseCase,
                 val registerProductRequest = call.receive<Product>()
                 val product = registerProductUseCase.execute(   registerProductRequest)
                 if (product != null) {
-                    call.respond(HttpStatusCode.Created, product)
+                    call.respond(HttpStatusCode.Created, "Product created successfully")
                 } else {
                     call.respond(HttpStatusCode.BadRequest, "Wrong to create")
                 }
@@ -102,6 +104,13 @@ fun Route.productsRoutes(registerProductUseCase: RegisterProductUseCase,
                 }else{
                     call.respond(HttpStatusCode.BadRequest, "Product details is not changed")
                 }
+            }
+
+            /*
+            The function to update data about product details.
+           */
+            get("/") {
+                call.respond(findProductsListUseCase.execute())
             }
         }
     }

@@ -1,11 +1,11 @@
 package com.cessup.domain.usecases.sales
 
-import com.cessup.domain.models.sales.Price
+import com.cessup.domain.models.sales.Sale
 import com.cessup.domain.repositories.SalesRepository
 import com.google.inject.Inject
 
 /**
- * Assignment of Price for anything.
+ * Assignment of Sale for anything.
  *
  * This class make price for all things to sale
  *
@@ -18,9 +18,9 @@ class AssignmentPriceUseCase @Inject constructor(private val salesRepository: Sa
     /**
      * Returns new user.
      *
-     * @param price this object got information about things for sale
+     * @param sale this object got information about things for sale
      * @return a [Boolean] for the result of function
      */
-    suspend fun execute(price: Price): Boolean = salesRepository.insertPrice(price)
+    suspend fun execute(sale: Sale): Boolean = salesRepository.insertPrice(sale)
 
 }

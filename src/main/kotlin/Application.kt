@@ -17,6 +17,7 @@ import com.cessup.domain.usecases.eatable.meal.NewMealUseCase
 import com.cessup.domain.usecases.eatable.meal.UpdateMealUseCase
 import com.cessup.domain.usecases.products.DeleteProductUseCase
 import com.cessup.domain.usecases.products.FindBySerialNumberUseCase
+import com.cessup.domain.usecases.products.GetProductsListUseCase
 import com.cessup.domain.usecases.products.RegisterProductUseCase
 import com.cessup.domain.usecases.products.UpdateDetailsProductUseCase
 import com.cessup.domain.usecases.products.UpdateProductUseCase
@@ -45,7 +46,6 @@ fun Application.module() {
     install(ContentNegotiation) {
         gson{
             setPrettyPrinting()
-            serializeNulls()
         }
     }
     install(CORS) { anyHost() }
@@ -74,6 +74,7 @@ fun Application.module() {
 
     val registerProduct = injector.getInstance(RegisterProductUseCase::class.java)
     val findProduct = injector.getInstance(FindBySerialNumberUseCase::class.java)
+    val findProducts = injector.getInstance(GetProductsListUseCase::class.java)
     val deleteProduct = injector.getInstance(DeleteProductUseCase::class.java)
     val updateProduct = injector.getInstance(UpdateProductUseCase::class.java)
     val updateProductDetails = injector.getInstance(UpdateDetailsProductUseCase::class.java)
@@ -90,7 +91,7 @@ fun Application.module() {
 
     routing {
         userRoutes(register, authentication,resetPassword,getUser, updateUserDetails,deleteUser, jwt)
-        productsRoutes(registerProduct,findProduct,deleteProduct,updateProduct,updateProductDetails)
+        productsRoutes(registerProduct,findProduct,findProducts,deleteProduct,updateProduct,updateProductDetails)
         drinkRoutes(newDrinkUseCase,updateDrinkUseCase,deleteDrinkUseCase,getDrinksUseCase)
         mealRoutes(newMealUseCase,updateMealUseCase,deleteMealUseCase,getMealsUseCase)
 

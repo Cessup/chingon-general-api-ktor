@@ -12,4 +12,5 @@ import org.litote.kmongo.Id
 data class MerchantEntity(
     @BsonId val id: Id<MerchantEntity>,
     val name:String,
+    val img:String,
 )

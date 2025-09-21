@@ -62,4 +62,11 @@ interface ProductRepository {
      */
     suspend fun findProductBySerialNumber(serialNumber: String): Product?
 
+    /**
+     * Find a user in the database by id.
+     *
+     * @return a list of products
+     */
+    suspend fun findProducts(): List<Product?>
+
 }
