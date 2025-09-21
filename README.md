@@ -1,4 +1,4 @@
-# Chingon Server
+# Chingon API 
 
 [![License](https://img.shields.io/github/license/Cessup/chingon-general-api-ktor
 )](https://opensource.org/licenses/Apache-2.0)
