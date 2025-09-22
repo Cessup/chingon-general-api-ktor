@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/github/license/Cessup/chingon-general-api-ktor
 )](https://opensource.org/licenses/Apache-2.0)
 [![Workflow](https://img.shields.io/github/actions/workflow/status/Cessup/chingon-general-api-ktor/.github%2Fworkflows%2Fchingon-api-ci.yml
-)](https://github.com/Cessup/chingon-general-api-ktor/blob/develop/.github/workflows/chingon-api-ci.yml)
+)](https://github.com/Cessup/chingon-general-api-ktor/actions)
 [![Commit](https://img.shields.io/github/last-commit/Cessup/chingon-general-api-ktor
 )](https://github.com/Cessup/chingon-general-api-ktor)
 
