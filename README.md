@@ -1,16 +1,94 @@
-# chingon
+# Chingon API 
 
-Chingon is an e-commerce platform. Its API offers all the services for different things by  ktor.
+[![License](https://img.shields.io/github/license/Cessup/chingon-general-api-ktor
+)](https://opensource.org/licenses/Apache-2.0)
+[![Workflow](https://img.shields.io/github/actions/workflow/status/Cessup/chingon-general-api-ktor/.github%2Fworkflows%2Fchingon-api-ci.yml
+)](https://github.com/Cessup/chingon-general-api-ktor/actions)
+[![Commit](https://img.shields.io/github/last-commit/Cessup/chingon-general-api-ktor
+)](https://github.com/Cessup/chingon-general-api-ktor)
 
-I'm still developing it, so my plan is to create a system based on my knowledge, as I wanted to show you how I can create any system. 
+![Example Image App](images/chingon_app_banner.svg)
 
-If anyone needs help, I'd be happy to help.
-
-If you want to more information about me you can visit my website.
-- [cessup.com](https://www.cessup.com)
+Chingon is an e-commerce platform. It's an API to different application that contain features to help you for make any applications.
 
 
 
+> The project is also available [here](https://github.com/Cessup/chingon-general-api-ktor).
+>
+> The [`develop` branch](https://github.com/Cessup/chingon-general-api-ktor) showcase a stable version.
+>
+
+>I'm still developing it, so my plan is to create a system based on my knowledge, as I wanted to show you how I can create any system.
+>If anyone needs help, I'd be happy to help.
+>If you want to more information about me you can visit my website.
+>- [cessup.com](https://www.cessup.com)
+
+## Flow Diagram
+
+This diagram shows the business model that exists in the system. It is a tool for understanding the business rules that exist.
+
+```mermaid
+  ---
+title: Flow Diagram about business
+---
+flowchart TD
+    subgraph session
+    A((Start)) --> AUTH1[/User data/]
+    AUTH1 --> AUTH2{is user exist?}
+    AUTH2 -->|No| AUTH3[Register]
+    AUTH2 --->|YES| AUTH4{is password correct?} 
+    AUTH3 --> AUTH2
+    AUTH4 ------>|YES| AUTH0[Authenticate]
+    AUTH4 --->|NO| AUTH5{Forgot password?}
+    AUTH5 -->|YES| AUTH6[Recovery] 
+    AUTH5 ---->|NO| AUTH4
+    AUTH6 ----> AUTH4
+    end
+    subgraph Private
+    subgraph Restaurant
+    AUTH0--> RES1[Receiver Order]
+    RES1 --> RES2{Is it drink?}
+    RES2 --> |YES| RES3[make it on beverage station]
+    RES2 --> |NO| RES4{Is it meal?}
+    RES4 --> |YES| RES5[make it on the line]
+    RES4 --> |NO| RES6[Make it by workmate]
+    RES3 --> RES7[Packaging]
+    RES5 --> RES7
+    RES6 --> RES7
+    RES7 --> RES8(((END)))
+    end
+    subgraph Commerce
+    AUTH0 --> COMM1[Products]
+    COMM1 --> COMME1{are products there?}
+    COMME1 --->|YES| COMM2[Sales]
+    COMM2 ---> COMM3[Orders]
+    COMM3 ---> COMME31{Is Order ended?}
+    COMME31 --->|YES| COMM4[Payments]
+    COMME31 --->|NO| COMM2
+    COMM4 ---> COMME41{is order completed?}
+    COMME41 ---->|YES| COMME42[Shipping]
+    COMME41 ---->|NO| COMME43{Is order cancel}
+    COMME43 ---->|YES| COMME44[Return money]
+    COMME43 ---->|NO| COMME45[Check status]
+    COMME42 ----> COMM5[Pick up]
+    COMME42 ----> COMM6[Delivery]
+    COMME44 ----> COMM7(((End)))
+    COMME45 ---->COMME41 
+    COMM5 -----> COMM7
+    COMM6 -----> COMM7
+    COMME1 -->|NO| COMM7
+    end
+    subgraph Profile
+    AUTH0--> PRO0[User Information]
+    PRO0--> PRO1{do you change user information?}
+    PRO1---> |YES| PRO2{Do you email or password?}
+    PRO1---> |NO| PRO3(((End)))
+    PRO2----> |YES| PRO4[Close session]
+    PRO2----> |NO| PRO0
+    PRO4-----> PRO3
+    end
+    end
+```
 
 ## Pre-Requirements
 Before your run, you need to have a mongo db can be local or remote. If you hava any mongo database you can configure that in application.yaml.
@@ -22,11 +100,31 @@ if you need more information about it you can check the next link
 ## Features
 Here's a list of features included in this project:
 
-| Name                                                                                        | Description                                                                                       |
-|---------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| [Session](https://www.postman.com/cessupx/cacao-workspace/folder/goo6ezk/session-services)  | There are all services about session like sign in or sing up.                                     |
-| [Product](https://www.postman.com/cessupx/cacao-workspace/folder/15fk1y4/products-services) | There are all services about products like insert, update, delete and every thing about products. |
-| [Eatable](https://www.postman.com/cessupx/cacao-workspace/folder/fjmlivp/eatable-services) | There are all services about eatable like drinks or meals.                                        |
+| Name                                                                                        | Description                                                                                           |
+|---------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| [Session](https://www.postman.com/cessupx/chingon-workspace/folder/goo6ezk/session-services)  | There are all services about session like sign in or sing up.                                         |
+| [Product](https://www.postman.com/cessupx/chingon-workspace/folder/15fk1y4/products-services) | There are all services about products like insert, update, delete and every thing about products.     |
+| [Eatable](https://www.postman.com/cessupx/chingon-workspace/folder/fjmlivp/eatable-services)  | There are all services about eatable like drinks or meals.                                            |
+| [Sales](https://www.postman.com/cessupx/chingon-workspace/overview)                           | There are all services about sales like price or promotion. (It is in progress to do)                 |
+| [Payments](https://www.postman.com/cessupx/chingon-workspace/overview)                        | There are all services about payments like communication with the bank. (It is in progress to do)     |
+| [Delivery](https://www.postman.com/cessupx/chingon-workspace/overview)                        | There are all services about delivery like pick-up, on the way and delivery.(It is in progress to do) |
+
+## How to use it
+
+If you want to use it you should check the next link because there is a workspace with all services by Postman.
+
+- [Workspace](https://www.postman.com/cessupx/chingon-workspace/overview)
+
+## Technologies
+
+The app uses the following multiplatform dependencies in its implementation:
+
+- [Ktor](https://ktor.io/) for networking
+- [Guice](https://github.com/google/guice/wiki/gettingstarted) for dependency injection
+- [Kmongo](https://litote.org/kmongo/) for dependency injection but it will migrate to MongoDB Kotlin Driver because it is deprecate.
+
+> The libraries are going to update when any project will absolute but before data we'll notify you. But you are free to use anything libraries in thins project because that is just a example.
+
 
 ## Building & Running
 
@@ -52,8 +150,3 @@ If the server starts successfully, you'll see the following output:
 2025-07-22 17:10:27.921 [DefaultDispatcher-worker-1] INFO  Application - Responding at http://0.0.0.0:8080
 ```
 
-## Use
-
-If you want to use it you should check the next link because there is a workspace with all services by Postman.
-
-- [Workspace](https://www.postman.com/cessupx/cacao-workspace/overview)
