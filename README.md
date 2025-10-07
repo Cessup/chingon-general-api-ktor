@@ -7,6 +7,8 @@
 [![Commit](https://img.shields.io/github/last-commit/Cessup/chingon-general-api-ktor
 )](https://github.com/Cessup/chingon-general-api-ktor)
 
+![Example Image App](images/chingon_app_banner.svg)
+
 Chingon is an e-commerce platform. It's an API to different application that contain features to help you for make any applications.
 
 
@@ -21,7 +23,72 @@ Chingon is an e-commerce platform. It's an API to different application that con
 >If you want to more information about me you can visit my website.
 >- [cessup.com](https://www.cessup.com)
 
+## Flow Diagram
 
+This diagram shows the business model that exists in the system. It is a tool for understanding the business rules that exist.
+
+```mermaid
+  ---
+title: Flow Diagram about business
+---
+flowchart TD
+    subgraph session
+    A((Start)) --> AUTH1[/User data/]
+    AUTH1 --> AUTH2{is user exist?}
+    AUTH2 -->|No| AUTH3[Register]
+    AUTH2 --->|YES| AUTH4{is password correct?} 
+    AUTH3 --> AUTH2
+    AUTH4 ------>|YES| AUTH0[Authenticate]
+    AUTH4 --->|NO| AUTH5{Forgot password?}
+    AUTH5 -->|YES| AUTH6[Recovery] 
+    AUTH5 ---->|NO| AUTH4
+    AUTH6 ----> AUTH4
+    end
+    subgraph Private
+    subgraph Restaurant
+    AUTH0--> RES1[Receiver Order]
+    RES1 --> RES2{Is it drink?}
+    RES2 --> |YES| RES3[make it on beverage station]
+    RES2 --> |NO| RES4{Is it meal?}
+    RES4 --> |YES| RES5[make it on the line]
+    RES4 --> |NO| RES6[Make it by workmate]
+    RES3 --> RES7[Packaging]
+    RES5 --> RES7
+    RES6 --> RES7
+    RES7 --> RES8(((END)))
+    end
+    subgraph Commerce
+    AUTH0 --> COMM1[Products]
+    COMM1 --> COMME1{are products there?}
+    COMME1 --->|YES| COMM2[Sales]
+    COMM2 ---> COMM3[Orders]
+    COMM3 ---> COMME31{Is Order ended?}
+    COMME31 --->|YES| COMM4[Payments]
+    COMME31 --->|NO| COMM2
+    COMM4 ---> COMME41{is order completed?}
+    COMME41 ---->|YES| COMME42[Shipping]
+    COMME41 ---->|NO| COMME43{Is order cancel}
+    COMME43 ---->|YES| COMME44[Return money]
+    COMME43 ---->|NO| COMME45[Check status]
+    COMME42 ----> COMM5[Pick up]
+    COMME42 ----> COMM6[Delivery]
+    COMME44 ----> COMM7(((End)))
+    COMME45 ---->COMME41 
+    COMM5 -----> COMM7
+    COMM6 -----> COMM7
+    COMME1 -->|NO| COMM7
+    end
+    subgraph Profile
+    AUTH0--> PRO0[User Information]
+    PRO0--> PRO1{do you change user information?}
+    PRO1---> |YES| PRO2{Do you email or password?}
+    PRO1---> |NO| PRO3(((End)))
+    PRO2----> |YES| PRO4[Close session]
+    PRO2----> |NO| PRO0
+    PRO4-----> PRO3
+    end
+    end
+```
 
 ## Pre-Requirements
 Before your run, you need to have a mongo db can be local or remote. If you hava any mongo database you can configure that in application.yaml.
