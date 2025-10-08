@@ -1,21 +1,18 @@
 package com.cessup.data.repositories
 
-import com.cessup.data.models.others.ColorEntity
-import com.cessup.data.models.others.DimensionsEntity
-import com.cessup.data.models.products.ProductDetailsEntity
-import com.cessup.data.models.products.ProductEntity
+import com.cessup.data.entities.toDocument
+import com.cessup.data.entities.toProduct
 import com.cessup.domain.models.products.Product
 import com.cessup.domain.models.products.ProductDetails
 import com.cessup.domain.repositories.ProductRepository
 import com.google.inject.Inject
-import com.mongodb.client.model.Filters
+import com.mongodb.client.model.Filters.eq
+import com.mongodb.client.model.Updates.set
+import com.mongodb.reactivestreams.client.MongoDatabase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.withContext
 import org.bson.types.ObjectId
-import org.litote.kmongo.coroutine.CoroutineDatabase
-import org.litote.kmongo.eq
-import org.litote.kmongo.id.toId
-import org.litote.kmongo.newId
 
 /**
  * Product Repository have every data about the products.
@@ -27,11 +24,11 @@ import org.litote.kmongo.newId
  *     Cessup
  * @since 1.0
  */
-class ProductRepositoryImpl @Inject constructor(database: CoroutineDatabase) : ProductRepository {
+class ProductRepositoryImpl @Inject constructor(database: MongoDatabase) : ProductRepository {
     /**
      * This function insert a new user in the database
      */
-    private val products = database.getCollection<ProductEntity>("products")
+    private val products = database.getCollection("products")
 
 
     /**
@@ -41,21 +38,8 @@ class ProductRepositoryImpl @Inject constructor(database: CoroutineDatabase) : P
      * @return a user
      */
     override suspend fun insertProduct(product: Product): Boolean = withContext(Dispatchers.IO) {
-        val productEntity = ProductEntity(
-            newId(),
-            product.serialNumber,
-            product.category,
-            product.subcategory,
-            product.stock,
-            product.name,
-            product.img,
-            product.rating,
-            ObjectId(product.idBrand),
-            ObjectId(product.idDetails)
-        )
-
         try {
-            products.insertOne(productEntity)
+            products.insertOne(product.toDocument()).awaitFirstOrNull()
             true
         } catch (_: Exception) {
             false
@@ -69,28 +53,14 @@ class ProductRepositoryImpl @Inject constructor(database: CoroutineDatabase) : P
      * @return a user
      */
     override suspend fun updateProduct(product: Product): Boolean = withContext(Dispatchers.IO) {
-        val productEntity = ProductEntity(
-            ObjectId(product.id).toId(),
-            product.serialNumber,
-            product.category,
-            product.subcategory,
-            product.stock,
-            product.name,
-            product.img,
-            product.rating,
-            ObjectId(product.idBrand),
-            ObjectId(product.idDetails)
-        )
-
         val updateResult = products.updateOne(
-            ProductEntity::id eq productEntity.id,
-            productEntity
-        )
-
-        updateResult.matchedCount > 0 && updateResult.modifiedCount > 0
+            eq("_id", product.id),
+            set("details", product.toDocument())
+        ).awaitFirstOrNull()
+        updateResult?.matchedCount == 1L
     }
 
-    private val productsDetails = database.getCollection< ProductDetailsEntity>("products_details")
+    private val productsDetails = database.getCollection("products_details")
 
     /**
      * The system can update the product details data to the product
@@ -99,30 +69,11 @@ class ProductRepositoryImpl @Inject constructor(database: CoroutineDatabase) : P
      * @return a Boolean
      */
     override suspend fun updateProductDetails(productDetails: ProductDetails): Boolean = withContext(Dispatchers.IO) {
-        val productDetailsEntity = ProductDetailsEntity(
-            ObjectId(productDetails.id).toId(),
-            productDetails.description,
-            productDetails.version,
-            DimensionsEntity(
-                ObjectId(productDetails.dimensions.id).toId(),
-                productDetails.dimensions.width,
-                productDetails.dimensions.height,
-                productDetails.dimensions.depth
-            ),
-            ColorEntity(
-                    ObjectId(productDetails.color.id).toId(),
-                productDetails.color.code,
-                productDetails.color.name
-            ),
-            productDetails.tags
-        )
-
         val updateResult = productsDetails.updateOne(
-            ProductDetailsEntity::id eq productDetailsEntity.id,
-            productDetailsEntity
-        )
-
-        updateResult.matchedCount > 0 && updateResult.modifiedCount > 0
+            eq("_id", productDetails.id),
+            productDetails.toDocument()
+        ).awaitFirstOrNull()
+        updateResult?.matchedCount == 1L
     }
 
     /**
@@ -132,8 +83,8 @@ class ProductRepositoryImpl @Inject constructor(database: CoroutineDatabase) : P
      * @return a Boolean
      */
     override suspend fun deleteProduct(id: ObjectId): Boolean = withContext(Dispatchers.IO) {
-        val deleteResult = products.deleteOneById(id)
-        deleteResult.deletedCount == 1L
+        val deleteResult = products.deleteOne(eq("_id", id)).awaitFirstOrNull()
+        deleteResult?.deletedCount == 1L
     }
 
     /**
@@ -143,21 +94,8 @@ class ProductRepositoryImpl @Inject constructor(database: CoroutineDatabase) : P
      * @return a user
      */
     override suspend fun findProductById(id: ObjectId): Product? =
-        products.findOneById(id)
-            ?.let { product->
-                Product(
-                    product.id.toString(),
-                    product.serialNumber,
-                    product.category,
-                    product.subcategory,
-                    product.stock,
-                    product.name,
-                    product.img,
-                    product.rating,
-                    product.idBrand.toString(),
-                    product.idDetails.toString()
-                )
-            }
+        products.find(eq("_id", id)).first().awaitFirstOrNull()?.toProduct()
+
 
     /**
      * Find a user in the database by id.
@@ -165,26 +103,6 @@ class ProductRepositoryImpl @Inject constructor(database: CoroutineDatabase) : P
      * @param serialNumber the serialNumber is identification to search the object in database
      * @return a user
      */
-    override suspend fun findProductBySerialNumber(serialNumber: String): Product?  {
-    val filter = Filters.eq(ProductEntity::serialNumber.toString(), serialNumber)
-
-       return  products.find(filter)
-            .let {
-                it.first()?.let { product->
-                    Product(
-                        product.id.toString(),
-                        product.serialNumber,
-                        product.category,
-                        product.subcategory,
-                        product.stock,
-                        product.name,
-                        product.img,
-                        product.rating,
-                        product.idBrand.toString(),
-                        product.idDetails.toString()
-                    )
-                }
-
-            }
-    }
+    override suspend fun findProductBySerialNumber(serialNumber: String): Product?  =
+        products.find(eq("serialnumber", serialNumber)).first().awaitFirstOrNull()?.toProduct()
 }

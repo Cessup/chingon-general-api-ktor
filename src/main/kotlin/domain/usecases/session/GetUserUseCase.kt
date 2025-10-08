@@ -2,7 +2,7 @@ package com.cessup.domain.usecases.session
 
 import com.cessup.domain.repositories.UserRepository
 import com.google.inject.Inject
-import domain.models.User
+import com.cessup.domain.models.session.User
 import org.bson.types.ObjectId
 import com.cessup.data.services.Encrypt
 

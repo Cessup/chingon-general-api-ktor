@@ -1,5 +1,7 @@
 package com.cessup.domain.models.eatable
 
+import org.bson.types.ObjectId
+
 /**
  * Represents a Meal.
  *
@@ -16,11 +18,11 @@ package com.cessup.domain.models.eatable
  * @since 1.0
  */
 data class Meal(
-     val id: String,
+     val id: ObjectId,
      val temperature: Double,
      val weight: Double,
      val category: String,
      val subcategory: String,
-     val idEnergy: String,
-     val idProduct: String
+     val idEnergy: ObjectId,
+     val idProduct: ObjectId
 )

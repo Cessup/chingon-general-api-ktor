@@ -4,7 +4,7 @@ import com.cessup.data.services.Encrypt
 import com.cessup.domain.models.products.Product
 import com.cessup.domain.repositories.ProductRepository
 import com.google.inject.Inject
-import domain.models.User
+import com.cessup.domain.models.session.User
 
 /**
  * Register of user in the system.

@@ -3,7 +3,7 @@ package com.cessup.domain.usecases.session
 import com.cessup.domain.repositories.UserRepository
 import com.cessup.data.services.Encrypt
 import com.google.inject.Inject
-import domain.models.User
+import com.cessup.domain.models.session.User
 
 /**
  * Authenticate of user in the system.

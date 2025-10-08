@@ -51,10 +51,9 @@ fun Route.userRoutes(registerUser: RegisterUserUseCase,
         */
         post("/register") {
             val userEntity = call.receive<RegisterUserRequest>()
-            val user = registerUser.execute(userEntity)
-            if (user!=null) {
-                val token = jwt.generateToken(user.id)
-                call.respond(HttpStatusCode.Created,mapOf("token" to token))
+            val success = registerUser.execute(userEntity)
+            if (success) {
+                call.respond(HttpStatusCode.Created,true)
             } else {
                 call.respond(HttpStatusCode.BadRequest, "Wrong to create")
             }

@@ -1,5 +1,7 @@
 package com.cessup.domain.models.products
 
+import org.bson.types.ObjectId
+
 /**
  * Represents Brand.
  *
@@ -13,7 +15,7 @@ package com.cessup.domain.models.products
  * @since 1.0
  */
 data class Brand (
-    val id: String,
+    val id: ObjectId,
     val name: String,
     val description:String,
     val img:String,

@@ -8,6 +8,7 @@ import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.jwt.jwt
+import org.bson.types.ObjectId
 import java.util.Date
 
 /**
@@ -56,11 +57,11 @@ object JwtProvider{
      *
      * @param userId the user id is the data for create a unique token
      */
-    fun generateToken(userId: String): String? =
+    fun generateToken(userId: ObjectId): String? =
         JWT.create()
             .withAudience(audience)
             .withIssuer(issuer)
-            .withClaim("id", userId)
+            .withClaim("id", userId.toString())
             .withExpiresAt(Date(System.currentTimeMillis() + 5 * 60 * 1000)) //5 min
             .sign(Algorithm.HMAC256(secret))
 

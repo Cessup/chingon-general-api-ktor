@@ -2,6 +2,7 @@ package com.cessup.domain.models.products
 
 import com.cessup.domain.models.others.Color
 import com.cessup.domain.models.others.Dimensions
+import org.bson.types.ObjectId
 
 /**
  * Represents a product details.
@@ -14,7 +15,7 @@ import com.cessup.domain.models.others.Dimensions
  * @property tags the birthday of the user
  */
 data class ProductDetails(
-    val id: String,
+    val id: ObjectId,
     val description: String,
     val version: String,
     val dimensions: Dimensions,

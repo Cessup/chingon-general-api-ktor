@@ -28,7 +28,7 @@ interface EatableRepository {
     /**
      * This function update a drink document in the collection
      *
-     * @param drink the drinkEntity is the object with the information about it
+     * @param drink the drink is the object with the information about it
      * @return a boolean that is the result about the process in database
      */
     suspend fun updateDrink(drink: Drink): Boolean

@@ -1,6 +1,6 @@
 package com.cessup.domain.models.eatable
 
-import org.bson.codecs.pojo.annotations.BsonId
+import org.bson.types.ObjectId
 
 /**
  * Represents a Drink.
@@ -19,12 +19,12 @@ import org.bson.codecs.pojo.annotations.BsonId
  * @since 1.0
  */
 data class Drink(
-    @BsonId val id: String,
+    val id: ObjectId,
     val temperature: Double,
     val isAlcoholic: Boolean,
     val millilitres: Int,
     val category: String,
     val subcategory: String,
-    val idEnergy: String,
-    val idProduct: String
+    val idEnergy: ObjectId,
+    val idProduct: ObjectId
 )

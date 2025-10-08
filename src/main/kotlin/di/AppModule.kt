@@ -61,7 +61,7 @@ class AppModule() : AbstractModule() {
      */
     @Provides @Singleton
     fun provideUserRepository(mongoConfig:MongoConfig): UserRepository =
-        UserRepositoryImpl(mongoConfig.getUserDb() )
+        UserRepositoryImpl(mongoConfig.userDB )
 
     /**
      * This function start to configure the framework
@@ -72,7 +72,7 @@ class AppModule() : AbstractModule() {
      */
     @Provides @Singleton
     fun provideProductRepository(mongoConfig:MongoConfig): ProductRepository =
-        ProductRepositoryImpl(mongoConfig.getProductsDB())
+        ProductRepositoryImpl(mongoConfig.productsDB)
 
     /**
      * This function start to configure the framework
@@ -83,5 +83,5 @@ class AppModule() : AbstractModule() {
      */
     @Provides @Singleton
     fun provideDrinkRepository(mongoConfig:MongoConfig): EatableRepository =
-        EatableRepositoryImpl(mongoConfig.getEatableDB())
+        EatableRepositoryImpl(mongoConfig.eatableDB)
 }

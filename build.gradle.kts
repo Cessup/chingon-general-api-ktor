@@ -31,9 +31,9 @@ dependencies {
 
     // Optional: logging/debugging
     implementation("ch.qos.logback:logback-classic:1.5.13")
-    //Mongo db
-    implementation("org.litote.kmongo:kmongo:4.11.0")
-    implementation("org.litote.kmongo:kmongo-coroutine:4.11.0")
+    //Mongo Database
+    implementation("org.mongodb:mongodb-driver-reactivestreams:4.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.7.3")
     //Encrypt
     implementation("at.favre.lib:bcrypt:0.10.2")
 
@@ -50,8 +50,18 @@ dependencies {
 
     // Unit testing
     testImplementation("io.mockk:mockk:1.13.10")
+
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation("org.testcontainers:testcontainers:1.19.1")
+    testImplementation("org.testcontainers:mongodb:1.19.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 }
 
 tasks.test {
     jvmArgs("-Xshare:off")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

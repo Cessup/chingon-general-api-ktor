@@ -1,5 +1,7 @@
 package com.cessup.domain.models.eatable
 
+import org.bson.types.ObjectId
+
 /**
  * Represents Eatable abstraction of eat.
  *
@@ -22,7 +24,7 @@ package com.cessup.domain.models.eatable
  * @since 1.0
  */
 data class Energy(
-    val id: String,
+    val id: ObjectId,
     val energyContent: Double,
     val perServing: Double,
     val protein: Double,

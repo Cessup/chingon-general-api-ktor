@@ -1,10 +1,9 @@
 package com.cessup.data.database
 
 import com.google.inject.Inject
-import org.litote.kmongo.coroutine.CoroutineClient
-import org.litote.kmongo.coroutine.CoroutineDatabase
-import org.litote.kmongo.coroutine.coroutine
-import org.litote.kmongo.reactivestreams.KMongo
+import com.mongodb.reactivestreams.client.MongoClient
+import com.mongodb.reactivestreams.client.MongoClients
+import com.mongodb.reactivestreams.client.MongoDatabase
 
 /**
  * MongoConfig is a object about database configuration in this case is mongodb
@@ -17,39 +16,31 @@ import org.litote.kmongo.reactivestreams.KMongo
  */
 
 class MongoConfig @Inject constructor(connectionString: String,
-                                       userDBString: String,
-                                       productDBString: String,
-                                       eatableDBString: String
+                                      val userDBString: String,
+                                      val productDBString: String,
+                                      val eatableDBString: String
     ) {
 
-    private val client : CoroutineClient = KMongo.createClient(connectionString).coroutine
-    private val userDB : CoroutineDatabase = client.getDatabase(userDBString)
-    private val productsDB : CoroutineDatabase = client.getDatabase(productDBString)
-    private val eatableDB : CoroutineDatabase = client.getDatabase(eatableDBString)
 
+
+    val mongoClient: MongoClient = MongoClients.create(connectionString)
     /**
      * This function give a collection from database
      * User collection have information about users
-     *
-     * @return [CoroutineDatabase] the object is a collection from database
      */
-    fun getUserDb() : CoroutineDatabase = userDB
-
+    val userDB: MongoDatabase
+        get() = mongoClient.getDatabase(userDBString)
     /**
      * This function give a collection from database
      * Product is a collection from db
-     *
-     * @return [CoroutineDatabase] the object is a collection from database
      */
-    fun getProductsDB() : CoroutineDatabase = productsDB
-
+    val productsDB: MongoDatabase
+        get()= mongoClient.getDatabase(productDBString)
     /**
      * This function give a database
-     * Drink is a database
-     *
-     * @return [CoroutineDatabase] the object is a collection from database
+     * Eatable is a database
      */
-    fun getEatableDB() : CoroutineDatabase = eatableDB
-
+    val eatableDB: MongoDatabase
+        get()= mongoClient.getDatabase(eatableDBString)
 
 }

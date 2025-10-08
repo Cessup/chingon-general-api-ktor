@@ -1,5 +1,7 @@
 package com.cessup.domain.models.session
 
+import org.bson.types.ObjectId
+
 /**
  * Represents a user.
  *
@@ -10,7 +12,7 @@ package com.cessup.domain.models.session
  * @property birthdate the birthday of the user
  */
 data class UserDetails(
-    val id: String,
+    val id: ObjectId,
     val name: String,
     val lastName: String,
     val address: String,

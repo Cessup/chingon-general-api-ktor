@@ -1,5 +1,7 @@
 package com.cessup.domain.models.products
 
+import org.bson.types.ObjectId
+
 /**
  * Represents a Product.
  *
@@ -15,7 +17,7 @@ package com.cessup.domain.models.products
  * @property idDetails All information about this product
  */
 data class Product(
-    val id: String,
+    val id: ObjectId,
     val serialNumber: String,
     val category: String,
     val subcategory: String,
@@ -23,6 +25,6 @@ data class Product(
     val name: String,
     val img: String,
     val rating: Double,
-    val idBrand: String,
-    val idDetails: String
+    val idBrand: ObjectId,
+    val idDetails: ObjectId
 )

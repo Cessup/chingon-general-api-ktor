@@ -60,7 +60,7 @@ fun Route.mealRoutes(
         */
         get("/get") {
             val drinks = getMealsUseCase.execute{ getMeals() }
-            if (drinks != null) {
+            if (drinks.isNotEmpty()) {
                 call.respond(drinks)
             } else {
                 call.respondText("Items not found", status = HttpStatusCode.NotFound)

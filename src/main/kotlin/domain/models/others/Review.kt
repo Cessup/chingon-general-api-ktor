@@ -1,5 +1,7 @@
 package com.cessup.domain.models.others
 
+import org.bson.types.ObjectId
+
 /**
  * Represents a Dimensions.
  *
@@ -10,8 +12,8 @@ package com.cessup.domain.models.others
  * @property date the date is the date of made it.
  */
 data class Review(
-    val id: String,
-    val userId: String,
+    val id: ObjectId,
+    val userId: ObjectId,
     val rating: Double,
     val comment: String,
     val date: Long,

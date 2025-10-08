@@ -1,13 +1,12 @@
 package com.cessup.domain.usecases.session
 
-import com.cessup.data.models.session.UserDetailsEntity
-import com.cessup.data.models.session.UserEntity
 import com.cessup.domain.repositories.UserRepository
-import domain.models.User
+import com.cessup.domain.models.session.User
 import com.cessup.data.services.Encrypt
 import com.cessup.data.services.RegisterUserRequest
+import com.cessup.domain.models.session.UserDetails
 import com.google.inject.Inject
-import org.litote.kmongo.newId
+import org.bson.types.ObjectId
 
 /**
  * Register of user in the system.
@@ -27,19 +26,20 @@ class RegisterUserUseCase @Inject constructor(private val userRepository: UserRe
      * @param RegisterUserRequest this object got information about the account like email,phoneNumber,nickname,password, etc.
      * @return A new [User] from the previously entered credentials
      */
-    suspend fun execute(registerRequest: RegisterUserRequest): User? {
+    suspend fun execute(registerRequest: RegisterUserRequest): Boolean {
         userRepository.findByEmail(registerRequest.email)?.let { throw IllegalArgumentException("Email already in use") }
         userRepository.findByPhone(registerRequest.phone)?.let { throw IllegalArgumentException("Phone already in use") }
         userRepository.findByPhone(registerRequest.nickname)?.let { throw IllegalArgumentException("NickName already in use") }
 
-        val userEntity = UserEntity(
-            newId(),
+        var id = ObjectId()
+        val user = User(
+            id,
             registerRequest.email,
             registerRequest.phone,
             registerRequest.nickname,
             security.hashPassword(registerRequest.password),
-            UserDetailsEntity(
-                newId(),
+            UserDetails(
+                ObjectId(),
                 registerRequest.details.name,
                 registerRequest.details.lastName,
                 registerRequest.details.address,
@@ -47,7 +47,6 @@ class RegisterUserUseCase @Inject constructor(private val userRepository: UserRe
                 registerRequest.details.birthdate
             ),
         )
-
-        return userRepository.insertUser(userEntity)
+        return userRepository.insertUser(user)
     }
 }

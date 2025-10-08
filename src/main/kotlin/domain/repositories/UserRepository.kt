@@ -1,8 +1,7 @@
 package com.cessup.domain.repositories
 
-import com.cessup.data.models.session.UserDetailsEntity
-import com.cessup.data.models.session.UserEntity
-import domain.models.User
+import com.cessup.domain.models.session.UserDetails
+import com.cessup.domain.models.session.User
 import org.bson.types.ObjectId
 
 /**
@@ -19,18 +18,18 @@ interface UserRepository {
     /**
      * This function insert a new user in the database
      *
-     * @param userEntity the user information from the services is here
+     * @param user the user information from the services is here
      * @return a user
      */
-    suspend fun insertUser(userEntity: UserEntity): User
+    suspend fun insertUser(user: User): Boolean
 
     /**
      * The system can update the user details data to the user
      *
-     * @param userDetailsEntity the email is a filter to search the user in database
+     * @param user the email is a filter to search the user in database
      * @return a Boolean
      */
-    suspend fun updateUserDetails(userDetailsEntity: UserDetailsEntity): Boolean
+    suspend fun updateUserDetails(id: String, userDetails: UserDetails): Boolean
 
     /**
      * This function delete a user in the database

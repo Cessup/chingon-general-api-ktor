@@ -1,5 +1,7 @@
 package com.cessup.domain.models.others
 
+import org.bson.types.ObjectId
+
 /**
  * Represents a Color.
  *
@@ -8,7 +10,7 @@ package com.cessup.domain.models.others
  * @property name the name the color
  */
 data class Color(
-    val id: String,
+    val id: ObjectId,
     val code: String,
     val name: String
 )
