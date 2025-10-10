@@ -150,3 +150,53 @@ If the server starts successfully, you'll see the following output:
 2025-07-22 17:10:27.921 [DefaultDispatcher-worker-1] INFO  Application - Responding at http://0.0.0.0:8080
 ```
 
+
+## Development
+This project is not finished, and this repository helps continue the project's development. Below is the standard to follow for new features.
+
+````
+---
+config:
+  logLevel: 'debug'
+  theme: 'base'
+  gitGraph:
+    rotateCommitLabel: true
+---
+gitGraph
+   commit id: "Initial commit"
+   commit id: "update: README.md"
+   branch release
+   branch develop
+   branch hotfix
+   branch test
+   checkout develop
+   commit id: "Code base"
+   branch feature_any
+   commit id: "Add Models"
+   commit id: "Add Repository"
+   commit id: "Add Services"
+   checkout develop
+   merge feature_any tag: "Integration" type: HIGHLIGHT
+   checkout test
+   merge develop id: "Pull changes"
+   commit id: "Test to any feature"
+   checkout feature_any
+   merge develop id: "Pull develop" 
+   commit id: "Repeat process"
+   checkout develop
+   commit id: "repeat process"
+   checkout release
+   merge test tag: "New version" type: HIGHLIGHT
+   checkout main
+   merge release id:"Stable Version"
+   checkout release
+   checkout hotfix
+   merge release id:"Any fail"
+   commit id:"Fix fire time"
+   checkout release
+   merge hotfix id:"Update Version" type: HIGHLIGHT
+   checkout main
+   merge release id:"Update Stable Code"
+   checkout release
+   
+````
