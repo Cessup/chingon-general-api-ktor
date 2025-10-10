@@ -154,7 +154,7 @@ If the server starts successfully, you'll see the following output:
 ## Development
 This project is not finished, and this repository helps continue the project's development. Below is the standard to follow for new features.
 
-````
+```mermaid
 ---
 config:
   logLevel: 'debug'
@@ -199,4 +199,4 @@ gitGraph
    merge release id:"Update Stable Code"
    checkout release
    
-````
+```
