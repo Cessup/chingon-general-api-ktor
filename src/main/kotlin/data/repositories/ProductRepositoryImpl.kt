@@ -7,11 +7,11 @@ import com.cessup.domain.models.products.ProductDetails
 import com.cessup.domain.repositories.ProductRepository
 import com.google.inject.Inject
 import com.mongodb.client.model.Filters.eq
-import com.mongodb.client.model.Updates.set
 import com.mongodb.reactivestreams.client.MongoDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.withContext
+import org.bson.Document
 import org.bson.types.ObjectId
 
 /**
@@ -55,7 +55,7 @@ class ProductRepositoryImpl @Inject constructor(database: MongoDatabase) : Produ
     override suspend fun updateProduct(product: Product): Boolean = withContext(Dispatchers.IO) {
         val updateResult = products.updateOne(
             eq("_id", product.id),
-            set("details", product.toDocument())
+            Document("\$set", product.toDocument())
         ).awaitFirstOrNull()
         updateResult?.matchedCount == 1L
     }

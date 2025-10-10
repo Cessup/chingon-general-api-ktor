@@ -32,7 +32,7 @@ class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepo
     /**
      * This function insert a new user in the database
      */
-    private val users = database.getCollection("users")
+    val users = database.getCollection("users")
 
     /**
      * This function insert a new user in the database
@@ -52,10 +52,11 @@ class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepo
     /**
      * The system can update the user details data to the user
      *
-     * @param user the email is a filter to search the user in database
+     * @param id the identify to user
+     * @param userDetails the userDetails contains the information to change
      * @return a Boolean
      */
-    override suspend fun updateUserDetails(id: String, userDetails: UserDetails) : Boolean = withContext(Dispatchers.IO) {
+    override suspend fun updateUserDetails(id: ObjectId, userDetails: UserDetails) : Boolean = withContext(Dispatchers.IO) {
         val updateResult = users.updateOne(
             eq("_id", id),
             set("details", userDetails)

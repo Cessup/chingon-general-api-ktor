@@ -22,8 +22,7 @@ dependencies {
     implementation(libs.logback.classic)
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.config.yaml)
-    testImplementation(libs.ktor.server.test.host)
-    testImplementation(libs.kotlin.test.junit)
+
 
     // JWT Auth
     implementation("io.ktor:ktor-server-auth:2.3.4")
@@ -48,14 +47,21 @@ dependencies {
     implementation("com.google.inject:guice:7.0.0")
     implementation("org.yaml:snakeyaml:2.2")
 
-    // Unit testing
-    testImplementation("io.mockk:mockk:1.13.10")
+    // JUnit 5
+    testImplementation("org.jetbrains.kotlin:kotlin-test") // <-- this gives you assertEquals, assertNotNull, etc.
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5") // <-- for running tests with JUnit 5
+    testImplementation(platform("org.junit:junit-bom:5.10.2"))
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
-    testImplementation("org.testcontainers:testcontainers:1.19.1")
-    testImplementation("org.testcontainers:mongodb:1.19.1")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    // Coroutines
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+
+    // MongoDB Driver
+    implementation("org.mongodb:mongodb-driver-sync:4.11.1")
+
+
+
 }
 
 tasks.test {
@@ -63,5 +69,11 @@ tasks.test {
 }
 
 tasks.test {
+    // Enable JUnit 5
     useJUnitPlatform()
+
+    // Optional: show standard output from tests
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }

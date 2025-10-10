@@ -13,6 +13,7 @@ import com.google.inject.Inject
  *     Cessup
  * @since 1.0
  */
+@Suppress("UNCHECKED_CAST")
 class GetMealsUseCase @Inject constructor(val eatableRepository: EatableRepository) {
 
     /**

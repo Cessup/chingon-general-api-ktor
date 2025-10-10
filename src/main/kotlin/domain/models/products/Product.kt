@@ -17,7 +17,7 @@ import org.bson.types.ObjectId
  * @property idDetails All information about this product
  */
 data class Product(
-    val id: ObjectId,
+    val id: ObjectId = ObjectId(),
     val serialNumber: String,
     val category: String,
     val subcategory: String,
@@ -25,6 +25,6 @@ data class Product(
     val name: String,
     val img: String,
     val rating: Double,
-    val idBrand: ObjectId,
-    val idDetails: ObjectId
+    val idBrand: ObjectId = ObjectId(),
+    val idDetails: ObjectId = ObjectId()
 )

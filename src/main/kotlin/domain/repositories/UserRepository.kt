@@ -29,7 +29,7 @@ interface UserRepository {
      * @param user the email is a filter to search the user in database
      * @return a Boolean
      */
-    suspend fun updateUserDetails(id: String, userDetails: UserDetails): Boolean
+    suspend fun updateUserDetails(id: ObjectId, userDetails: UserDetails): Boolean
 
     /**
      * This function delete a user in the database

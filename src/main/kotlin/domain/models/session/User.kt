@@ -13,7 +13,7 @@ import org.bson.types.ObjectId
  * @property details All information about this user
  */
 data class User(
-    val id: ObjectId,
+    val id: ObjectId = ObjectId(),
     val email: String,
     val phone: String,
     val nickname: String,

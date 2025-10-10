@@ -1,116 +1,136 @@
-package data
+package com.cessup.data
 
 import com.cessup.data.repositories.UserRepositoryImpl
 import com.cessup.domain.models.session.User
 import com.cessup.domain.models.session.UserDetails
-import com.cessup.domain.repositories.UserRepository
+import com.mongodb.ConnectionString
+import com.mongodb.MongoClientSettings
 import com.mongodb.reactivestreams.client.MongoClients
+import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
+import org.bson.codecs.configuration.CodecRegistries.fromProviders
+import org.bson.codecs.configuration.CodecRegistries.fromRegistries
+import org.bson.codecs.pojo.PojoCodecProvider
 import org.bson.types.ObjectId
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
-import org.testcontainers.containers.MongoDBContainer
+import org.junit.jupiter.api.*
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
+import kotlin.test.assertNull
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class UserRepositoryTest {
+class UserRepositoryImplTest {
 
-    private val mongoContainer = MongoDBContainer("mongo:6.0")
-    private lateinit var repository: UserRepository
+    private lateinit var repository: UserRepositoryImpl
 
     @BeforeAll
-    fun setup(): Unit = runBlocking {
-        mongoContainer.start()
-        val client = MongoClients.create(mongoContainer.connectionString)
-        val db = client.getDatabase("test_db")
+    fun setup() {
+        val pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build())
+        val codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry)
 
-        repository = UserRepositoryImpl(db)
+        val settings = MongoClientSettings.builder()
+            .applyConnectionString(ConnectionString("mongodb://localhost:27017"))
+            .codecRegistry(codecRegistry)
+            .build()
+
+        val client = MongoClients.create(settings)
+        val database = client.getDatabase("session_db")
+
+        repository = UserRepositoryImpl(database)
     }
 
-    @AfterAll
-    fun tearDown() {
-        mongoContainer.stop()
-    }
-
-    @Test
-    fun `insert and find user`() = runBlocking {
-        val user = createUser()
-
-        repository.insertUser(user)
-        val found = repository.findById(user.id)
-
-        Assertions.assertNotNull(found)
-        Assertions.assertEquals(user.email, found?.email)
+    @BeforeEach
+    fun clean() = runTest {
+        repository.users.deleteMany(org.bson.Document()).awaitFirstOrNull()
     }
 
     @Test
-    fun `update user details`() = runBlocking {
-        val user = createUser()
-        repository.insertUser(user)
+    fun `insertUser should insert a user and allow retrieval by id`() = runBlocking {
+        val user = createTestUser()
 
-        val newDetails = user.details.copy(name = "NewName")
-        repository.updateUserDetails(user.id.toString(), newDetails)
+        val insertResult = repository.insertUser(user)
+        assertTrue(insertResult, "Insert should succeed")
 
-        val updated = repository.findById(user.id)
-        Assertions.assertEquals("NewName", updated?.details?.name)
+        val fetchedUser = repository.findById(user.id)
+        assertNotNull(fetchedUser)
+        assertEquals(user.email, fetchedUser.email)
+        assertEquals(user.phone, fetchedUser.phone)
     }
 
     @Test
-    fun `update user password`() = runBlocking {
-        val user = createUser()
+    fun `updateUserDetails should update details for existing user`() = runBlocking {
+        val user = createTestUser()
         repository.insertUser(user)
 
-        repository.updatePassword(user.email, "newPassword123")
-        val updated = repository.findById(user.id)
-        Assertions.assertEquals("newPassword123", updated?.password)
+        val newDetails = user.details.copy(name = "UpdatedName")
+        val updateResult = repository.updateUserDetails(user.id, newDetails)
+        assertTrue(updateResult, "Update should succeed")
+
+        val updatedUser = repository.findById(user.id)
+        assertEquals("UpdatedName", updatedUser?.details?.name)
     }
 
     @Test
-    fun `delete user`() = runBlocking {
-        val user = createUser()
+    fun `updatePassword should update password for existing user`() = runBlocking {
+        val user = createTestUser()
         repository.insertUser(user)
 
-        repository.deleteUser(user.id)
-        val deleted = repository.findById(user.id)
-        Assertions.assertNull(deleted)
+        val newPassword = "newSecurePassword"
+        val updateResult = repository.updatePassword(user.email, newPassword)
+        assertTrue(updateResult, "Password update should succeed")
+
+        val updatedUser = repository.findByEmail(user.email)
+        assertEquals(newPassword, updatedUser?.password)
     }
 
     @Test
-    fun `find by email`() = runBlocking {
-        val user = createUser()
+    fun `deleteUser should delete user by id`() = runBlocking {
+        val user = createTestUser()
         repository.insertUser(user)
 
-        val found = repository.findByEmail(user.email)
-        Assertions.assertNotNull(found)
-        Assertions.assertEquals(user.phone, found?.phone)
+        val deleteResult = repository.deleteUser(user.id)
+        assertTrue(deleteResult, "Delete should succeed")
+
+        val deletedUser = repository.findById(user.id)
+        assertNull(deletedUser, "User should no longer exist")
     }
 
     @Test
-    fun `find by phone`() = runBlocking {
-        val user = createUser()
+    fun `findByEmail should find user by email`() = runBlocking {
+        val user = createTestUser()
         repository.insertUser(user)
 
-        val found = repository.findByPhone(user.phone)
-        Assertions.assertNotNull(found)
-        Assertions.assertEquals(user.email, found?.email)
+        val fetchedUser = repository.findByEmail(user.email)
+        assertNotNull(fetchedUser)
+        assertEquals(user.phone, fetchedUser.phone)
     }
 
-    private fun createUser(): User = User(
+    @Test
+    fun `findByPhone should find user by phone`() = runBlocking {
+        val user = createTestUser()
+        repository.insertUser(user)
+
+        val fetchedUser = repository.findByPhone(user.phone)
+        assertNotNull(fetchedUser)
+        assertEquals(user.email, fetchedUser.email)
+    }
+
+    private fun createTestUser(): User {
+        return User(
             id = ObjectId(),
-            email = "example_one@gmail.com",
-            phone = "5511223344",
+            email = "test@example.com",
+            phone = "1234567890",
             nickname = "tester",
-            password = "securepass",
+            password = "password",
             details = UserDetails(
                 id = ObjectId(),
                 name = "John",
                 lastName = "Doe",
                 address = "123 Main St",
                 gender = "male",
-                birthdate = 946684800000 // Jan 1, 2000
+                birthdate = 946684800000
             )
         )
-
+    }
 }

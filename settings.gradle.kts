@@ -1,1 +1,1 @@
-rootProject.name = "chingon"
+rootProject.name = "chingon-general-api-ktor"

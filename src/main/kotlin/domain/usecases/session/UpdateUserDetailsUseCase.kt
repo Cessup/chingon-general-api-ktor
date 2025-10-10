@@ -27,9 +27,9 @@ class UpdateUserDetailsUseCase @Inject constructor(private val userRepository: U
      * @param RegisterUserRequest this object got information about the account like email,phoneNumber,nickname,password, etc.
      * @return A new [User] from the previously entered credentials
      */
-    suspend fun execute(registerRequest: RegisterUserDetailsRequest, id: String): Boolean {
+    suspend fun execute(registerRequest: RegisterUserDetailsRequest, id: ObjectId): Boolean {
         val userDetails = UserDetails(
-            ObjectId(id),
+            id,
             registerRequest.name,
             registerRequest.lastName,
             registerRequest.address,

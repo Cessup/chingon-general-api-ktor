@@ -15,7 +15,7 @@ import org.bson.types.ObjectId
  * @property tags the birthday of the user
  */
 data class ProductDetails(
-    val id: ObjectId,
+    val id: ObjectId = ObjectId(),
     val description: String,
     val version: String,
     val dimensions: Dimensions,

@@ -20,6 +20,7 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import kotlinx.serialization.Serializable
+import org.bson.types.ObjectId
 
 /**
  * This function have all services in the User module
@@ -109,7 +110,8 @@ fun Route.userRoutes(registerUser: RegisterUserUseCase,
             put("/{id}/userDetails/") {
                 val request = call.receive<RegisterUserDetailsRequest>()
                 val id = call.parameters["id"] ?: return@put call.respond(HttpStatusCode.BadRequest, "Missing ID")
-                if(updateUserDetails.execute(request,id)){
+                val result = updateUserDetails.execute(request, ObjectId(id))
+                if(result) {
                     call.respond(HttpStatusCode.OK, "User details changed successfully")
                 }else{
                     call.respond(HttpStatusCode.BadRequest, "User details is not changed")

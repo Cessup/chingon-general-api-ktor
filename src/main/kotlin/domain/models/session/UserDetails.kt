@@ -12,7 +12,7 @@ import org.bson.types.ObjectId
  * @property birthdate the birthday of the user
  */
 data class UserDetails(
-    val id: ObjectId,
+    val id: ObjectId = ObjectId(),
     val name: String,
     val lastName: String,
     val address: String,

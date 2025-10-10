@@ -15,7 +15,7 @@ import org.bson.types.ObjectId
  * @since 1.0
  */
 data class Brand (
-    val id: ObjectId,
+    val id: ObjectId = ObjectId(),
     val name: String,
     val description:String,
     val img:String,
