@@ -38,9 +38,6 @@ jobs:
 
       - name: Build JAR (assemble)
         run: ./gradlew assemble
-        with:
-          name: ktor-artifact
-          path: build/libs/*.jar
 
       - name: Upload JAR file
         uses: actions/upload-artifact@v4
