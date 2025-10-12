@@ -4,6 +4,8 @@ import com.cessup.domain.repositories.UserRepository
 import com.cessup.domain.models.session.User
 import com.cessup.data.services.Encrypt
 import com.cessup.data.services.RegisterUserRequest
+import com.cessup.domain.models.session.Role
+import com.cessup.domain.models.session.Type
 import com.cessup.domain.models.session.UserDetails
 import com.google.inject.Inject
 import org.bson.types.ObjectId
@@ -31,9 +33,8 @@ class RegisterUserUseCase @Inject constructor(private val userRepository: UserRe
         userRepository.findByPhone(registerRequest.phone)?.let { throw IllegalArgumentException("Phone already in use") }
         userRepository.findByPhone(registerRequest.nickname)?.let { throw IllegalArgumentException("NickName already in use") }
 
-        var id = ObjectId()
         val user = User(
-            id,
+            ObjectId(),
             registerRequest.email,
             registerRequest.phone,
             registerRequest.nickname,
@@ -47,6 +48,17 @@ class RegisterUserUseCase @Inject constructor(private val userRepository: UserRe
                 registerRequest.details.birthdate
             ),
         )
-        return userRepository.insertUser(user)
+        //Add user in user collection
+        val resultNewUser = userRepository.insertUser(user)
+        //Find the role
+        val list = userRepository.findRoles()
+
+        val role: Role? = list.filter { role ->
+            registerRequest.role == role?.code
+        }[0]
+
+        val type = Type(ObjectId(),user.id, role?.id ?: ObjectId())
+        val resultTypeUser = userRepository.insertType(type)
+        return resultNewUser && resultTypeUser
     }
 }

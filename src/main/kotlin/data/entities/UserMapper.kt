@@ -1,8 +1,10 @@
 package com.cessup.data.entities
 
+import com.cessup.domain.models.session.Role
 import org.bson.Document
 import com.cessup.domain.models.session.UserDetails
 import com.cessup.domain.models.session.User
+import com.cessup.domain.models.session.Type
 
 fun User.toDocument(): Document = Document()
     .append("_id", id)
@@ -19,6 +21,16 @@ fun UserDetails.toDocument(): Document = Document()
     .append("address", address)
     .append("gender", gender)
     .append("birthdate", birthdate)
+
+fun Type.toDocument(): Document = Document()
+    .append("_id", id)
+    .append("idUser", idUser)
+    .append("idRole", idRole)
+
+fun Role.toDocument(): Document = Document()
+    .append("_id", id)
+    .append("code", code)
+    .append("name", name)
 
 fun Document.toUser(): User =
     User(
@@ -38,4 +50,19 @@ fun Document.toUserDetails(): UserDetails =
         address = getString("address"),
         gender = getString("gender"),
         birthdate = getLong("birthdate")
+    )
+
+
+fun Document.toType(): Type =
+    Type(
+        id = getObjectId("_id"),
+        idUser = getObjectId("idUser"),
+        idRole = getObjectId("idRole")
+    )
+
+fun Document.toRole(): Role =
+    Role(
+        id = getObjectId("_id"),
+        code = getInteger("code"),
+        name = getString("name")
     )

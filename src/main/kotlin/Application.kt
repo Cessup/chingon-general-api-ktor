@@ -21,10 +21,13 @@ import com.cessup.domain.usecases.products.RegisterProductUseCase
 import com.cessup.domain.usecases.products.UpdateDetailsProductUseCase
 import com.cessup.domain.usecases.products.UpdateProductUseCase
 import com.cessup.domain.usecases.session.AuthenticateUseCase
+import com.cessup.domain.usecases.session.DeleteRoleUseCase
 import com.cessup.domain.usecases.session.DeleteUserUseCase
 import com.cessup.domain.usecases.session.GetUserUseCase
+import com.cessup.domain.usecases.session.RegisterRoleUseCase
 import com.cessup.domain.usecases.session.RegisterUserUseCase
 import com.cessup.domain.usecases.session.ResetPasswordUseCase
+import com.cessup.domain.usecases.session.UpdateRoleUseCase
 import com.cessup.domain.usecases.session.UpdateUserDetailsUseCase
 import com.google.inject.Guice
 import io.ktor.http.HttpStatusCode
@@ -71,6 +74,10 @@ fun Application.module() {
     val getUser = injector.getInstance(GetUserUseCase::class.java)
     val updateUserDetails = injector.getInstance(UpdateUserDetailsUseCase::class.java)
     val deleteUser = injector.getInstance(DeleteUserUseCase::class.java)
+    val registerRole = injector.getInstance(RegisterRoleUseCase::class.java)
+    val updateRole = injector.getInstance(UpdateRoleUseCase::class.java)
+    val deleteRole = injector.getInstance(DeleteRoleUseCase::class.java)
+
 
     val registerProduct = injector.getInstance(RegisterProductUseCase::class.java)
     val findProduct = injector.getInstance(FindBySerialNumberUseCase::class.java)
@@ -89,7 +96,7 @@ fun Application.module() {
     val getMealsUseCase = injector.getInstance(GetMealsUseCase::class.java)
 
     routing {
-        userRoutes(register, authentication,resetPassword,getUser, updateUserDetails,deleteUser, jwt)
+        userRoutes(register, authentication,resetPassword,getUser, updateUserDetails,deleteUser, registerRole, updateRole, deleteRole, jwt)
         productsRoutes(registerProduct,findProduct,deleteProduct,updateProduct,updateProductDetails)
         drinkRoutes(newDrinkUseCase,updateDrinkUseCase,deleteDrinkUseCase,getDrinksUseCase)
         mealRoutes(newMealUseCase,updateMealUseCase,deleteMealUseCase,getMealsUseCase)

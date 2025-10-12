@@ -1,10 +1,13 @@
 package com.cessup.data.services
 
 import com.cessup.domain.usecases.session.AuthenticateUseCase
+import com.cessup.domain.usecases.session.DeleteRoleUseCase
 import com.cessup.domain.usecases.session.DeleteUserUseCase
 import com.cessup.domain.usecases.session.GetUserUseCase
+import com.cessup.domain.usecases.session.RegisterRoleUseCase
 import com.cessup.domain.usecases.session.RegisterUserUseCase
 import com.cessup.domain.usecases.session.ResetPasswordUseCase
+import com.cessup.domain.usecases.session.UpdateRoleUseCase
 import com.cessup.domain.usecases.session.UpdateUserDetailsUseCase
 import io.ktor.http.*
 import io.ktor.server.auth.authenticate
@@ -45,6 +48,9 @@ fun Route.userRoutes(registerUser: RegisterUserUseCase,
                      getUser: GetUserUseCase,
                      updateUserDetails : UpdateUserDetailsUseCase,
                      deleteUser: DeleteUserUseCase,
+                     registerRole: RegisterRoleUseCase,
+                     updateRole: UpdateRoleUseCase,
+                     deleteRole: DeleteRoleUseCase,
                      jwt: JwtProvider) {
     route("/session") {
         /*
@@ -132,6 +138,47 @@ fun Route.userRoutes(registerUser: RegisterUserUseCase,
                 }
             }
 
+            /*
+            This function create a new user with their details.
+            */
+            post("/registerRole") {
+                val request = call.receive<RegisterRoleRequest>()
+                val success = registerRole.execute(request)
+                if (success) {
+                    call.respond(HttpStatusCode.Created,true)
+                } else {
+                    call.respond(HttpStatusCode.BadRequest, "Wrong to create")
+                }
+            }
+
+            /*
+             The function to rest password if the user forgot it
+            */
+            put("/{id}/role/") {
+                val request = call.receive<RegisterRoleRequest>()
+                val id = call.parameters["id"] ?: return@put call.respond(HttpStatusCode.BadRequest, "Missing ID")
+                val result = updateRole.execute(request, ObjectId(id))
+                if(result) {
+                    call.respond(HttpStatusCode.OK, "User details changed successfully")
+                }else{
+                    call.respond(HttpStatusCode.BadRequest, "User details is not changed")
+                }
+            }
+
+            /*
+             The function to delete role
+            */
+            delete("/deleteRole") {
+                val principal = call.principal<JWTPrincipal>()
+                val id = principal!!.payload.getClaim("id").asString()
+                val deleted = deleteRole.execute(id)
+                if (deleted) {
+                    call.respond(HttpStatusCode.OK, "User deleted successfully")
+                } else {
+                    call.respond(HttpStatusCode.NotFound, "User not found")
+                }
+            }
+
             post("/closeSession") {
                 call.response.cookies.append(
                     Cookie(
@@ -166,7 +213,16 @@ data class AuthenticateRequest(val email: String, val password: String)
  * @property nickname All information about this user
  */
 @Serializable
-data class RegisterUserRequest(val email: String, val phone: String, val password: String, val nickname:String, val details:RegisterUserDetailsRequest)
+data class RegisterUserRequest(val email: String, val phone: String, val password: String, val nickname:String, val details:RegisterUserDetailsRequest, val role:Int)
+
+/**
+ * Request to Register a new role
+ *
+ * @property code the code is a number of rol
+ * @property name the name of the role
+ */
+@Serializable
+data class RegisterRoleRequest(val code: Int, val name: String)
 
 /**
  * Request to Register Details of a new user

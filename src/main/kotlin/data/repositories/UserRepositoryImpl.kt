@@ -1,7 +1,11 @@
 package com.cessup.data.repositories
 
 import com.cessup.data.entities.toDocument
+import com.cessup.data.entities.toMeal
+import com.cessup.data.entities.toRole
 import com.cessup.data.entities.toUser
+import com.cessup.domain.models.session.Role
+import com.cessup.domain.models.session.Type
 import com.cessup.domain.repositories.UserRepository
 import com.google.inject.Inject
 import com.mongodb.client.model.Filters.eq
@@ -10,6 +14,9 @@ import com.mongodb.reactivestreams.client.MongoDatabase
 import com.cessup.domain.models.session.User
 import com.cessup.domain.models.session.UserDetails
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.withContext
 import org.bson.types.ObjectId
@@ -30,9 +37,17 @@ import org.bson.types.ObjectId
 class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepository {
 
     /**
-     * This function insert a new user in the database
+     * This value is to User Collection in DB
      */
     val users = database.getCollection("users")
+    /**
+     * This value is to Type Collection in DB
+     */
+    val types = database.getCollection("type")
+    /**
+     * This value is to Roles Collection in DB
+     */
+    val roles = database.getCollection("roles")
 
     /**
      * This function insert a new user in the database
@@ -43,6 +58,24 @@ class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepo
     override suspend fun insertUser(user: User): Boolean = withContext(Dispatchers.IO) {
         try {
             users.insertOne(user.toDocument()).awaitFirstOrNull()
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    override suspend fun insertType(type: Type): Boolean  = withContext(Dispatchers.IO) {
+        try {
+            types.insertOne( type.toDocument() ).awaitFirstOrNull()
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    override suspend fun insertRole(role: Role): Boolean  = withContext(Dispatchers.IO) {
+        try {
+            roles.insertOne(role.toDocument()).awaitFirstOrNull()
             true
         } catch (_: Exception) {
             false
@@ -64,6 +97,17 @@ class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepo
         updateResult?.matchedCount == 1L
     }
 
+    override suspend fun updateTypeUser(
+        idUser: ObjectId,
+        idNewRole: ObjectId
+    ): Boolean = withContext(Dispatchers.IO) {
+        val updateResult = types.updateOne(
+            eq("_idUser", idUser),
+            set("_idRole", idNewRole)
+        ).awaitFirstOrNull()
+        updateResult?.matchedCount == 1L
+    }
+
     /**
      * The system can update the password to the user
      *
@@ -79,6 +123,22 @@ class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepo
         updateResult?.modifiedCount == 1L
     }
 
+    override suspend fun updateRole(role: Role): Boolean  = withContext(Dispatchers.IO) {
+        val updateResult = roles.replaceOne(
+            eq("_id", role.id),
+            role.toDocument()
+        ).awaitFirstOrNull()
+        updateResult?.modifiedCount == 1L
+    }
+
+    override suspend fun updateType(id:ObjectId, type: String): Boolean  = withContext(Dispatchers.IO) {
+        val updateResult = users.updateOne(
+            eq("_id", id),
+            set("type", type)
+        ).awaitFirstOrNull()
+        updateResult?.modifiedCount == 1L
+    }
+
     /**
      * This function delete a user in the database
      *
@@ -87,6 +147,16 @@ class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepo
      */
     override suspend fun deleteUser(id: ObjectId) : Boolean = withContext(Dispatchers.IO) {
         val deleteResult = users.deleteOne(eq("_id", id)).awaitFirstOrNull()
+        deleteResult?.deletedCount == 1L
+    }
+
+    override suspend fun deleteType(id: ObjectId): Boolean  = withContext(Dispatchers.IO) {
+        val deleteResult = types.deleteOne(eq("_id", id)).awaitFirstOrNull()
+        deleteResult?.deletedCount == 1L
+    }
+
+    override suspend fun deleteRole(id: ObjectId): Boolean  = withContext(Dispatchers.IO) {
+        val deleteResult = roles.deleteOne(eq("_id", id)).awaitFirstOrNull()
         deleteResult?.deletedCount == 1L
     }
 
@@ -115,4 +185,7 @@ class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepo
      */
     override suspend fun findByPhone(phone: String): User? =
         users.find(eq("phone", phone)).first().awaitFirstOrNull()?.toUser()
+
+    override suspend fun findRoles(): List<Role?> = roles.find().asFlow().map { it.toRole() }.toList()
+
 }

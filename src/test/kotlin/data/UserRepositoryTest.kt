@@ -1,6 +1,7 @@
 package com.cessup.data
 
 import com.cessup.data.repositories.UserRepositoryImpl
+import com.cessup.domain.models.session.Role
 import com.cessup.domain.models.session.User
 import com.cessup.domain.models.session.UserDetails
 import com.mongodb.ConnectionString
@@ -14,10 +15,12 @@ import org.bson.codecs.configuration.CodecRegistries.fromRegistries
 import org.bson.codecs.pojo.PojoCodecProvider
 import org.bson.types.ObjectId
 import org.junit.jupiter.api.*
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserRepositoryImplTest {
@@ -116,6 +119,34 @@ class UserRepositoryImplTest {
         assertEquals(user.email, fetchedUser.email)
     }
 
+    @Test
+    fun `insertRole should insert a role and allow retrieval by id`() = runBlocking {
+        val role = createTestRole()
+        val insertResult = repository.insertRole(role)
+        assertTrue(insertResult, "Insert should succeed")
+    }
+
+    @Test
+    fun `updateRole should update name for existing role`() = runBlocking {
+        val role = createTestRole()
+        repository.insertRole(role)
+
+        val newRole= role.copy(name = "UpdatedName")
+
+        val updateResult = repository.updateRole(newRole)
+        assertTrue(updateResult, "Role update should succeed")
+    }
+
+    @Test
+    fun `findRoles should find a list of roles `() = runBlocking {
+        val role = createTestRole()
+        repository.insertRole(role)
+
+        val fetchedRoles= repository.findRoles()
+        assertNotNull(fetchedRoles)
+        assertContains(fetchedRoles,role)
+    }
+
     private fun createTestUser(): User {
         return User(
             id = ObjectId(),
@@ -131,6 +162,14 @@ class UserRepositoryImplTest {
                 gender = "male",
                 birthdate = 946684800000
             )
+        )
+    }
+
+    private fun createTestRole(): Role {
+        return Role(
+            id = ObjectId(),
+            code = 1,
+            name = "Administrator"
         )
     }
 }
