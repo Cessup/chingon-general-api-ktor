@@ -3,6 +3,7 @@ package com.cessup.data.services
 import com.cessup.domain.usecases.session.AuthenticateUseCase
 import com.cessup.domain.usecases.session.DeleteRoleUseCase
 import com.cessup.domain.usecases.session.DeleteUserUseCase
+import com.cessup.domain.usecases.session.GetRoleUseCase
 import com.cessup.domain.usecases.session.GetUserUseCase
 import com.cessup.domain.usecases.session.RegisterRoleUseCase
 import com.cessup.domain.usecases.session.RegisterUserUseCase
@@ -31,12 +32,16 @@ import org.bson.types.ObjectId
  * There are All business cases about users because it
  *
  * @constructor [RegisterUserUseCase] the RegisterUser is a use case about make a new users
- * @constructor [AuthenticateUseCase] the RegisterUser is a use case about make a new users
- * @constructor [RegisterUserUseCase] the RegisterUser is a use case about make a new users
- * @constructor [ResetPasswordUseCase] the RegisterUser is a use case about make a new users
- * @constructor [GetUserUseCase] the RegisterUser is a use case about make a new users
- * @constructor [DeleteUserUseCase] the RegisterUser is a use case about make a new users
- * @constructor [JwtProvider] the RegisterUser is a use case about make a new users
+ * @constructor [AuthenticateUseCase] the Authenticate is a use case to give permissions to access
+ * @constructor [ResetPasswordUseCase] the ResetPassword is a use case to change password to access
+ * @constructor [GetUserUseCase] the GetUser is a use case about information of user
+ * @constructor [UpdateUserDetailsUseCase] the UpdateUserDetails is a use case about details user information
+ * @constructor [DeleteUserUseCase] the DeleteUser is a use case to delete the user
+ * @constructor [RegisterRoleUseCase] the RegisterRole is a use case about make a new role
+ * @constructor [UpdateRoleUseCase] the UpdateRole is update role information
+ * @constructor [GetRoleUseCase] the GetRole is a use case to return a role from id user
+ * @constructor [DeleteRoleUseCase] the DeleteRole is a use case to delete role
+ * @constructor [JwtProvider] the JWT to security of the services
  *
  * @author
  *     Cessup
@@ -50,6 +55,7 @@ fun Route.userRoutes(registerUser: RegisterUserUseCase,
                      deleteUser: DeleteUserUseCase,
                      registerRole: RegisterRoleUseCase,
                      updateRole: UpdateRoleUseCase,
+                     getRole: GetRoleUseCase,
                      deleteRole: DeleteRoleUseCase,
                      jwt: JwtProvider) {
     route("/session") {
@@ -163,6 +169,15 @@ fun Route.userRoutes(registerUser: RegisterUserUseCase,
                 }else{
                     call.respond(HttpStatusCode.BadRequest, "User details is not changed")
                 }
+            }
+
+            /*
+             The function to rest password if the user forgot it
+            */
+            get("/getRole/{id}/") {
+                val id = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest, "Missing ID")
+                val result = getRole.execute( ObjectId(id))
+                call.respond(result.name)
             }
 
             /*

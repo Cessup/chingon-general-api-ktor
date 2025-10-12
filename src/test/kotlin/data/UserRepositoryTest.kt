@@ -2,6 +2,7 @@ package com.cessup.data
 
 import com.cessup.data.repositories.UserRepositoryImpl
 import com.cessup.domain.models.session.Role
+import com.cessup.domain.models.session.Type
 import com.cessup.domain.models.session.User
 import com.cessup.domain.models.session.UserDetails
 import com.mongodb.ConnectionString
@@ -20,7 +21,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserRepositoryImplTest {
@@ -60,6 +60,29 @@ class UserRepositoryImplTest {
         assertEquals(user.email, fetchedUser.email)
         assertEquals(user.phone, fetchedUser.phone)
     }
+
+    @Test
+    fun `insertType should insert a type`() = runBlocking {
+        val user = createTestUser()
+        val role = createTestRole()
+
+        val insertUserResult = repository.insertUser(user)
+        assertTrue(insertUserResult, "Insert should succeed")
+        val insertRoleResult = repository.insertRole(role)
+        assertTrue(insertRoleResult, "Insert should succeed")
+
+        val type = Type(ObjectId(),user.id,role.id)
+        val insertTypeResult = repository.insertType(type)
+        assertTrue(insertTypeResult, "Insert should succeed")
+    }
+
+    @Test
+    fun `insertRole should insert a role`() = runBlocking {
+        val role = createTestRole()
+        val insertResult = repository.insertRole(role)
+        assertTrue(insertResult, "Insert should succeed")
+    }
+
 
     @Test
     fun `updateUserDetails should update details for existing user`() = runBlocking {
@@ -117,13 +140,6 @@ class UserRepositoryImplTest {
         val fetchedUser = repository.findByPhone(user.phone)
         assertNotNull(fetchedUser)
         assertEquals(user.email, fetchedUser.email)
-    }
-
-    @Test
-    fun `insertRole should insert a role and allow retrieval by id`() = runBlocking {
-        val role = createTestRole()
-        val insertResult = repository.insertRole(role)
-        assertTrue(insertResult, "Insert should succeed")
     }
 
     @Test

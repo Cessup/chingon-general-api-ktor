@@ -28,8 +28,7 @@ interface UserRepository {
     /**
      * This function insert a new user in the database
      *
-     * @param idUser the id to identify the user
-     * @param idRole the id to identify the role will assign
+     * @param type the id to identify the user
      * @return result in boolean value
      */
     suspend fun insertType(type: Type): Boolean
@@ -45,7 +44,8 @@ interface UserRepository {
     /**
      * The system can update the user details data to the user
      *
-     * @param user the email is a filter to search the user in database
+     * @param id the id to identify
+     * @param userDetails the user details is to update the object
      * @return result in boolean value
      */
     suspend fun updateUserDetails(id: ObjectId, userDetails: UserDetails): Boolean
@@ -57,7 +57,7 @@ interface UserRepository {
      * @param idNewRole the id to identify the role will assign
      * @return result in boolean value
      */
-    suspend fun updateTypeUser(idUser: ObjectId, idNewRole: ObjectId): Boolean
+    suspend fun updateType(idUser: ObjectId, idNewRole: ObjectId): Boolean
 
     /**
      * This function delete a user in the database
@@ -75,14 +75,6 @@ interface UserRepository {
      * @return result in boolean value
      */
     suspend fun updateRole(role: Role): Boolean
-
-    /**
-     * This function delete a user in the database
-     *
-     * @param type the type is the new value to user about type of user
-     * @return a user
-     */
-    suspend fun updateType(id: ObjectId, type:String): Boolean
     /**
      * This function delete a user in the database
      *
@@ -127,6 +119,13 @@ interface UserRepository {
      * @return the result is a user found from the search
      */
     suspend fun findByPhone(phone: String): User?
+    /**
+     * This function delete a user in the database
+     *
+     * @param idUser it is the identify to user
+     * @return a user
+     */
+    suspend fun findRoleByIdUser(idUser: ObjectId): Role
 
     /**
      * Find a list of roles user in the database.

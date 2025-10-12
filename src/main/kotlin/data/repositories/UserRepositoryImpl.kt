@@ -1,8 +1,8 @@
 package com.cessup.data.repositories
 
 import com.cessup.data.entities.toDocument
-import com.cessup.data.entities.toMeal
 import com.cessup.data.entities.toRole
+import com.cessup.data.entities.toType
 import com.cessup.data.entities.toUser
 import com.cessup.domain.models.session.Role
 import com.cessup.domain.models.session.Type
@@ -63,7 +63,12 @@ class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepo
             false
         }
     }
-
+    /**
+     * This function insert a new user in the database
+     *
+     * @param type the id to identify the user
+     * @return result in boolean value
+     */
     override suspend fun insertType(type: Type): Boolean  = withContext(Dispatchers.IO) {
         try {
             types.insertOne( type.toDocument() ).awaitFirstOrNull()
@@ -72,7 +77,12 @@ class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepo
             false
         }
     }
-
+    /**
+     * This function insert a new role to user in the database
+     *
+     * @param role the user information from the services is here
+     * @return result in boolean value
+     */
     override suspend fun insertRole(role: Role): Boolean  = withContext(Dispatchers.IO) {
         try {
             roles.insertOne(role.toDocument()).awaitFirstOrNull()
@@ -96,18 +106,23 @@ class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepo
         ).awaitFirstOrNull()
         updateResult?.matchedCount == 1L
     }
-
-    override suspend fun updateTypeUser(
+    /**
+     * The system can update the user details data to the user
+     *
+     * @param idUser the id to identify the user
+     * @param idNewRole the id to identify the role will assign
+     * @return result in boolean value
+     */
+    override suspend fun updateType(
         idUser: ObjectId,
         idNewRole: ObjectId
     ): Boolean = withContext(Dispatchers.IO) {
         val updateResult = types.updateOne(
-            eq("_idUser", idUser),
-            set("_idRole", idNewRole)
+            eq("idUser", idUser),
+            set("idRole", idNewRole)
         ).awaitFirstOrNull()
         updateResult?.matchedCount == 1L
     }
-
     /**
      * The system can update the password to the user
      *
@@ -122,7 +137,12 @@ class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepo
         ).awaitFirstOrNull()
         updateResult?.modifiedCount == 1L
     }
-
+    /**
+     * This function delete a user in the database
+     *
+     * @param role the id is identification to search the object in database
+     * @return result in boolean value
+     */
     override suspend fun updateRole(role: Role): Boolean  = withContext(Dispatchers.IO) {
         val updateResult = roles.replaceOne(
             eq("_id", role.id),
@@ -130,15 +150,6 @@ class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepo
         ).awaitFirstOrNull()
         updateResult?.modifiedCount == 1L
     }
-
-    override suspend fun updateType(id:ObjectId, type: String): Boolean  = withContext(Dispatchers.IO) {
-        val updateResult = users.updateOne(
-            eq("_id", id),
-            set("type", type)
-        ).awaitFirstOrNull()
-        updateResult?.modifiedCount == 1L
-    }
-
     /**
      * This function delete a user in the database
      *
@@ -149,12 +160,22 @@ class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepo
         val deleteResult = users.deleteOne(eq("_id", id)).awaitFirstOrNull()
         deleteResult?.deletedCount == 1L
     }
-
+    /**
+     * This function delete a role of user in the database
+     *
+     * @param id the id is identification to search the object in database
+     * @return a Boolean
+     */
     override suspend fun deleteType(id: ObjectId): Boolean  = withContext(Dispatchers.IO) {
         val deleteResult = types.deleteOne(eq("_id", id)).awaitFirstOrNull()
         deleteResult?.deletedCount == 1L
     }
-
+    /**
+     * This function delete a role of user in the database
+     *
+     * @param id the id is identification to search the object in database
+     * @return a Boolean
+     */
     override suspend fun deleteRole(id: ObjectId): Boolean  = withContext(Dispatchers.IO) {
         val deleteResult = roles.deleteOne(eq("_id", id)).awaitFirstOrNull()
         deleteResult?.deletedCount == 1L
@@ -186,6 +207,21 @@ class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepo
     override suspend fun findByPhone(phone: String): User? =
         users.find(eq("phone", phone)).first().awaitFirstOrNull()?.toUser()
 
+    /**
+     * This function delete a user in the database
+     *
+     * @param idUser it is the identify to user
+     * @return a user
+     */
+    override suspend fun findRoleByIdUser(idUser: ObjectId): Role {
+        val typeUser = types.find(eq("idUser", idUser)).first().awaitFirstOrNull()?.toType()
+        return roles.find(eq("_id", typeUser?.idRole)).first().awaitFirstOrNull()!!.toRole()
+    }
+    /**
+     * Find a list of roles user in the database.
+     *
+     * @return the result is a list of roles found from the search
+     */
     override suspend fun findRoles(): List<Role?> = roles.find().asFlow().map { it.toRole() }.toList()
 
 }

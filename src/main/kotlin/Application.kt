@@ -23,6 +23,7 @@ import com.cessup.domain.usecases.products.UpdateProductUseCase
 import com.cessup.domain.usecases.session.AuthenticateUseCase
 import com.cessup.domain.usecases.session.DeleteRoleUseCase
 import com.cessup.domain.usecases.session.DeleteUserUseCase
+import com.cessup.domain.usecases.session.GetRoleUseCase
 import com.cessup.domain.usecases.session.GetUserUseCase
 import com.cessup.domain.usecases.session.RegisterRoleUseCase
 import com.cessup.domain.usecases.session.RegisterUserUseCase
@@ -72,6 +73,7 @@ fun Application.module() {
     val authentication = injector.getInstance(AuthenticateUseCase::class.java)
     val resetPassword = injector.getInstance(ResetPasswordUseCase::class.java)
     val getUser = injector.getInstance(GetUserUseCase::class.java)
+    val getRole = injector.getInstance(GetRoleUseCase::class.java)
     val updateUserDetails = injector.getInstance(UpdateUserDetailsUseCase::class.java)
     val deleteUser = injector.getInstance(DeleteUserUseCase::class.java)
     val registerRole = injector.getInstance(RegisterRoleUseCase::class.java)
@@ -96,7 +98,7 @@ fun Application.module() {
     val getMealsUseCase = injector.getInstance(GetMealsUseCase::class.java)
 
     routing {
-        userRoutes(register, authentication,resetPassword,getUser, updateUserDetails,deleteUser, registerRole, updateRole, deleteRole, jwt)
+        userRoutes(register, authentication,resetPassword,getUser, updateUserDetails,deleteUser, registerRole, updateRole, getRole, deleteRole, jwt)
         productsRoutes(registerProduct,findProduct,deleteProduct,updateProduct,updateProductDetails)
         drinkRoutes(newDrinkUseCase,updateDrinkUseCase,deleteDrinkUseCase,getDrinksUseCase)
         mealRoutes(newMealUseCase,updateMealUseCase,deleteMealUseCase,getMealsUseCase)
