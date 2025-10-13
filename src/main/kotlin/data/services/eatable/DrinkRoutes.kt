@@ -16,6 +16,7 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import org.bson.types.ObjectId
+import org.koin.core.Koin
 
 /**
  * This function have all services in the Product module
@@ -31,12 +32,12 @@ import org.bson.types.ObjectId
  *     Cessup
  * @since 1.0
  */
-fun Route.drinkRoutes(
-    newDrinkUseCase: NewDrinkUseCase,
-    updateDrinkUseCase: UpdateDrinkUseCase,
-    deleteDrinkUseCase: DeleteDrinkUseCase,
-    getDrinksUseCase: GetDrinksUseCase,
-){
+fun Route.drinkRoutes(koin: Koin) {
+    val newDrinkUseCase = koin.get<NewDrinkUseCase>()
+    val updateDrinkUseCase = koin.get<UpdateDrinkUseCase>()
+    val deleteDrinkUseCase= koin.get<DeleteDrinkUseCase>()
+    val getDrinksUseCase = koin.get<GetDrinksUseCase>()
+
     route("eatable/drinks/") {
         /*
          All functions needs authorization to access to them

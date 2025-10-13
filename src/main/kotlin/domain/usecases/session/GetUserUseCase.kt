@@ -1,10 +1,9 @@
 package com.cessup.domain.usecases.session
 
 import com.cessup.domain.repositories.UserRepository
-import com.google.inject.Inject
 import com.cessup.domain.models.session.User
 import org.bson.types.ObjectId
-import com.cessup.data.services.Encrypt
+import com.cessup.data.services.Security
 
 /**
  * Get User of user in the system.
@@ -16,7 +15,7 @@ import com.cessup.data.services.Encrypt
  *     Cessup
  * @since 1.0
  */
-class GetUserUseCase @Inject constructor(val userRepository: UserRepository, val security: Encrypt) {
+class GetUserUseCase(val repository: UserRepository, val security: Security){
 
     /**
      * Returns the sum of two integers.
@@ -25,7 +24,7 @@ class GetUserUseCase @Inject constructor(val userRepository: UserRepository, val
      * @return A [User] from the previously email
      */
     suspend fun execute(id: String): User? {
-        val userUnsure = userRepository.findById(ObjectId(id))
+        val userUnsure = repository.findById(ObjectId(id))
         return userUnsure?.copy(password = security.hashPassword(password = userUnsure.password))
     }
 }

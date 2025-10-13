@@ -1,7 +1,6 @@
 package com.cessup.domain.usecases.eatable.meal
 
 import com.cessup.domain.repositories.EatableRepository
-import com.google.inject.Inject
 
 /**
  * Update meal by id in the system.
@@ -13,8 +12,7 @@ import com.google.inject.Inject
  *     Cessup
  * @since 1.0
  */
-class UpdateMealUseCase @Inject constructor(private val eatableRepository: EatableRepository) {
-
+class UpdateMealUseCase(val repository: EatableRepository) {
     /**
      * Update a product.
      *
@@ -22,6 +20,6 @@ class UpdateMealUseCase @Inject constructor(private val eatableRepository: Eatab
      * @return A [Boolean] that is the result about operation.
      */
     suspend fun <T, R> execute(obj: T, updateMeal: suspend EatableRepository.(T) -> R): R {
-        return eatableRepository.updateMeal(obj)
+        return repository.updateMeal(obj)
     }
 }

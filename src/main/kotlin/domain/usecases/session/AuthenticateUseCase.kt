@@ -1,8 +1,7 @@
 package com.cessup.domain.usecases.session
 
+import com.cessup.data.services.Security
 import com.cessup.domain.repositories.UserRepository
-import com.cessup.data.services.Encrypt
-import com.google.inject.Inject
 import com.cessup.domain.models.session.User
 
 /**
@@ -15,7 +14,7 @@ import com.cessup.domain.models.session.User
  *     Cessup
  * @since 1.0
  */
-class AuthenticateUseCase @Inject constructor(val userRepository: UserRepository) {
+class AuthenticateUseCase (val repository: UserRepository, val security: Security){
 
     /**
      * Returns the sum of two integers.
@@ -25,8 +24,8 @@ class AuthenticateUseCase @Inject constructor(val userRepository: UserRepository
      * @return A new [User] from the previously entered credentials
      */
     suspend fun execute(email: String, password: String): User? {
-        val user = userRepository.findByEmail(email) ?: return null
-        Encrypt.verifyPassword(password, Encrypt.hashPassword(user.password))
+        val user = repository.findByEmail(email) ?: return null
+        security.verifyPassword(password, security.hashPassword(user.password))
         return user
     }
 }

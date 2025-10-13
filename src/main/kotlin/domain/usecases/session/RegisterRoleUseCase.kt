@@ -4,9 +4,7 @@ import com.cessup.domain.repositories.UserRepository
 import com.cessup.data.services.RegisterRoleRequest
 import com.cessup.data.services.RegisterUserRequest
 import com.cessup.domain.models.session.Role
-import com.google.inject.Inject
 import org.bson.types.ObjectId
-
 /**
  * Register of user in the system.
  *
@@ -17,7 +15,8 @@ import org.bson.types.ObjectId
  *     Cessup
  * @since 1.0
  */
-class RegisterRoleUseCase @Inject constructor(private val userRepository: UserRepository) {
+class RegisterRoleUseCase(val repository: UserRepository){
+
 
     /**
      * Returns new user.
@@ -26,7 +25,7 @@ class RegisterRoleUseCase @Inject constructor(private val userRepository: UserRe
      * @return A [Boolean] that is the result about this process
      */
     suspend fun execute(registerRoleRequest: RegisterRoleRequest): Boolean {
-        val list = userRepository.findRoles().filter { role ->
+        repository.findRoles().filter { role ->
             registerRoleRequest == role
         }.let { if (it.isNotEmpty()) throw IllegalArgumentException("Role already in use") }
 
@@ -36,6 +35,6 @@ class RegisterRoleUseCase @Inject constructor(private val userRepository: UserRe
             registerRoleRequest.name,
         )
 
-        return userRepository.insertRole(role)
+        return repository.insertRole(role)
     }
 }

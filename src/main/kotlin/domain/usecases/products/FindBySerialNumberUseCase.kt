@@ -3,8 +3,6 @@ package com.cessup.domain.usecases.products
 import com.cessup.domain.models.products.Product
 import com.cessup.domain.repositories.ProductRepository
 import com.cessup.domain.repositories.UserRepository
-import com.google.inject.Inject
-
 /**
  * Find of product in the system by SerialNumber.
  *
@@ -15,8 +13,7 @@ import com.google.inject.Inject
  *     Cessup
  * @since 1.0
  */
-class FindBySerialNumberUseCase @Inject constructor(val productRepository: ProductRepository) {
-
+class FindBySerialNumberUseCase(val repository: ProductRepository) {
     /**
      * Returns the sum of two integers.
      *
@@ -24,6 +21,6 @@ class FindBySerialNumberUseCase @Inject constructor(val productRepository: Produ
      *
      * @return The [Product] found in this search.
      */
-    suspend fun execute(serialNumber: String): Product? = productRepository.findProductBySerialNumber(serialNumber)
+    suspend fun execute(serialNumber: String): Product? = repository.findProductBySerialNumber(serialNumber)
 
 }

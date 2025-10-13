@@ -1,6 +1,5 @@
 package com.cessup.data.database
 
-import com.google.inject.Inject
 import com.mongodb.reactivestreams.client.MongoClient
 import com.mongodb.reactivestreams.client.MongoClients
 import com.mongodb.reactivestreams.client.MongoDatabase
@@ -15,7 +14,7 @@ import com.mongodb.reactivestreams.client.MongoDatabase
  * @since 1.0
  */
 
-class MongoConfig @Inject constructor(connectionString: String,
+class MongoConfig( connectionString: String,
                                       val userDBString: String,
                                       val productDBString: String,
                                       val eatableDBString: String

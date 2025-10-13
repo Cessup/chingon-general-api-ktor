@@ -6,7 +6,6 @@ import com.cessup.data.entities.toMeal
 import com.cessup.domain.models.eatable.Drink
 import com.cessup.domain.models.eatable.Meal
 import com.cessup.domain.repositories.EatableRepository
-import com.google.inject.Inject
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Updates.set
 import com.mongodb.reactivestreams.client.MongoDatabase
@@ -28,7 +27,7 @@ import org.bson.types.ObjectId
  *     Cessup
  * @since 1.0
  */
-class EatableRepositoryImpl @Inject constructor(database: MongoDatabase) : EatableRepository {
+class EatableRepositoryImpl (val database: MongoDatabase) : EatableRepository {
     /*Functions about Drink Collection*/
 
     /**

@@ -1,7 +1,6 @@
 package com.cessup.domain.usecases.eatable.drink
 
 import com.cessup.domain.repositories.EatableRepository
-import com.google.inject.Inject
 
 /**
  * Find of drink in the system.
@@ -14,7 +13,7 @@ import com.google.inject.Inject
  * @since 1.0
  */
 @Suppress("UNCHECKED_CAST")
-class GetDrinksUseCase @Inject constructor(val eatableRepository: EatableRepository) {
+class GetDrinksUseCase(val repository: EatableRepository) {
 
     /**
      * Returns the sum of two integers.
@@ -24,6 +23,6 @@ class GetDrinksUseCase @Inject constructor(val eatableRepository: EatableReposit
      * @return The [Any] found in this search.
      */
     suspend fun <R> execute(getDrinks: suspend EatableRepository.() -> R): R {
-        return eatableRepository.getDrinks() as R
+        return repository.getDrinks() as R
     }
 }

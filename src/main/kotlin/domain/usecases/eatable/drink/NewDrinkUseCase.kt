@@ -1,7 +1,6 @@
 package com.cessup.domain.usecases.eatable.drink
 
 import com.cessup.domain.repositories.EatableRepository
-import com.google.inject.Inject
 
 /**
  * Register of drink in the system.
@@ -13,7 +12,8 @@ import com.google.inject.Inject
  *     Cessup
  * @since 1.0
  */
-class NewDrinkUseCase @Inject constructor(private val eatableRepository: EatableRepository) {
+class NewDrinkUseCase(val repository: EatableRepository)  {
+
     /**
      * Returns new user.
      *
@@ -21,7 +21,7 @@ class NewDrinkUseCase @Inject constructor(private val eatableRepository: Eatable
      * @return A new [Boolean] from the previously entered credentials
      */
     suspend fun <T, R> execute(drink: T, insertDrink: suspend EatableRepository.(T) -> R): R {
-        return eatableRepository.insertDrink(drink)
+        return repository.insertDrink(drink)
     }
 
 }

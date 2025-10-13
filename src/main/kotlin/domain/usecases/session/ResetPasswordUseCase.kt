@@ -1,9 +1,7 @@
 package com.cessup.domain.usecases.session
 
-import com.cessup.data.services.Encrypt
+import com.cessup.data.services.Security
 import com.cessup.domain.repositories.UserRepository
-import com.google.inject.Inject
-
 /**
  * Reset Password of user in the system.
  *
@@ -14,7 +12,7 @@ import com.google.inject.Inject
  *     Cessup
  * @since 1.0
  */
-class ResetPasswordUseCase @Inject constructor(private val userRepository: UserRepository, private val security: Encrypt) {
+class ResetPasswordUseCase(val repository: UserRepository, val security: Security){
 
     /**
      * Returns the sum of two integers.
@@ -23,6 +21,6 @@ class ResetPasswordUseCase @Inject constructor(private val userRepository: UserR
      * @param password the password is the new value to change in the user
      * @return A [Boolean] that is the result about this process
      */
-    suspend fun execute(email:String, password:String): Boolean = userRepository.updatePassword(email,security.hashPassword(password))
+    suspend fun execute(email:String, password:String): Boolean = repository.updatePassword(email,security.hashPassword(password))
 
 }

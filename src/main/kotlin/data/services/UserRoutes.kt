@@ -25,6 +25,7 @@ import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import kotlinx.serialization.Serializable
 import org.bson.types.ObjectId
+import org.koin.core.Koin
 
 /**
  * This function have all services in the User module
@@ -41,23 +42,24 @@ import org.bson.types.ObjectId
  * @constructor [UpdateRoleUseCase] the UpdateRole is update role information
  * @constructor [GetRoleUseCase] the GetRole is a use case to return a role from id user
  * @constructor [DeleteRoleUseCase] the DeleteRole is a use case to delete role
- * @constructor [JwtProvider] the JWT to security of the services
  *
  * @author
  *     Cessup
  * @since 1.0
  */
-fun Route.userRoutes(registerUser: RegisterUserUseCase,
-                     authenticate: AuthenticateUseCase,
-                     resetPassword: ResetPasswordUseCase,
-                     getUser: GetUserUseCase,
-                     updateUserDetails : UpdateUserDetailsUseCase,
-                     deleteUser: DeleteUserUseCase,
-                     registerRole: RegisterRoleUseCase,
-                     updateRole: UpdateRoleUseCase,
-                     getRole: GetRoleUseCase,
-                     deleteRole: DeleteRoleUseCase,
-                     jwt: JwtProvider) {
+fun Route.userRoutes(koin: Koin) {
+    val registerUser = koin.get<RegisterUserUseCase>()
+    val authenticate = koin.get<AuthenticateUseCase>()
+    val resetPassword = koin.get<ResetPasswordUseCase>()
+    val getUser = koin.get<GetUserUseCase>()
+    val updateUserDetails = koin.get<UpdateUserDetailsUseCase>()
+    val deleteUser = koin.get<DeleteUserUseCase>()
+    val registerRole = koin.get<RegisterRoleUseCase>()
+    val updateRole = koin.get<UpdateRoleUseCase>()
+    val getRole = koin.get<GetRoleUseCase>()
+    val deleteRole = koin.get<DeleteRoleUseCase>()
+    val security = koin.get<Security>()
+
     route("/session") {
         /*
          This function create a new user with their details.
@@ -79,7 +81,7 @@ fun Route.userRoutes(registerUser: RegisterUserUseCase,
             val req = call.receive<AuthenticateRequest>()
             val user = authenticate.execute(email = req.email, password = req.password)
             if (user!=null) {
-                val token = jwt.generateToken(user.id)
+                val token = security.generateToken(user.id)
                 call.respond(mapOf("token" to token))
             } else {
                 call.respond(HttpStatusCode.Unauthorized, "Invalid credentials")

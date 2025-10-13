@@ -5,7 +5,6 @@ import com.cessup.data.entities.toProduct
 import com.cessup.domain.models.products.Product
 import com.cessup.domain.models.products.ProductDetails
 import com.cessup.domain.repositories.ProductRepository
-import com.google.inject.Inject
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.reactivestreams.client.MongoDatabase
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +23,7 @@ import org.bson.types.ObjectId
  *     Cessup
  * @since 1.0
  */
-class ProductRepositoryImpl @Inject constructor(database: MongoDatabase) : ProductRepository {
+class ProductRepositoryImpl(val database: MongoDatabase) : ProductRepository {
     /**
      * This function insert a new user in the database
      */

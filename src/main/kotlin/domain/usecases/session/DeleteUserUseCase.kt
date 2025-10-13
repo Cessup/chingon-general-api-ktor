@@ -1,9 +1,7 @@
 package com.cessup.domain.usecases.session
 
 import com.cessup.domain.repositories.UserRepository
-import com.google.inject.Inject
 import org.bson.types.ObjectId
-
 /**
  * Delete any user of the system.
  *
@@ -14,7 +12,7 @@ import org.bson.types.ObjectId
  *     Cessup
  * @since 1.0
  */
-class DeleteUserUseCase @Inject constructor(private val userRepository: UserRepository) {
+class DeleteUserUseCase(val repository: UserRepository) {
 
     /**
      * Returns the sum of two integers.
@@ -22,5 +20,5 @@ class DeleteUserUseCase @Inject constructor(private val userRepository: UserRepo
      * @param id the id from user for get their information
      * @return A [Boolean] that is the result about this process
      */
-    suspend fun execute(id: String): Boolean = userRepository.deleteUser(ObjectId(id))
+    suspend fun execute(id: String): Boolean = repository.deleteUser(ObjectId(id))
 }

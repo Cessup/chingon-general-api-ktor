@@ -7,7 +7,6 @@ import com.cessup.data.entities.toUser
 import com.cessup.domain.models.session.Role
 import com.cessup.domain.models.session.Type
 import com.cessup.domain.repositories.UserRepository
-import com.google.inject.Inject
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Updates.set
 import com.mongodb.reactivestreams.client.MongoDatabase
@@ -34,7 +33,7 @@ import org.bson.types.ObjectId
  *     Cessup
  * @since 1.0
  */
-class UserRepositoryImpl @Inject constructor(database: MongoDatabase) : UserRepository {
+class UserRepositoryImpl(val database: MongoDatabase) : UserRepository {
 
     /**
      * This value is to User Collection in DB

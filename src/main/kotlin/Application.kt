@@ -1,51 +1,38 @@
 package com.cessup
 
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import com.cessup.data.exceptions.AuthorizationException
-import com.cessup.data.services.JwtProvider
+import com.cessup.data.services.Security
 import com.cessup.data.services.eatable.drinkRoutes
 import com.cessup.data.services.eatable.mealRoutes
 import com.cessup.data.services.productsRoutes
 import com.cessup.data.services.userRoutes
-import com.cessup.di.AppModule
-import com.cessup.domain.usecases.eatable.drink.DeleteDrinkUseCase
-import com.cessup.domain.usecases.eatable.drink.GetDrinksUseCase
-import com.cessup.domain.usecases.eatable.drink.NewDrinkUseCase
-import com.cessup.domain.usecases.eatable.drink.UpdateDrinkUseCase
-import com.cessup.domain.usecases.eatable.meal.DeleteMealUseCase
-import com.cessup.domain.usecases.eatable.meal.GetMealsUseCase
-import com.cessup.domain.usecases.eatable.meal.NewMealUseCase
-import com.cessup.domain.usecases.eatable.meal.UpdateMealUseCase
-import com.cessup.domain.usecases.products.DeleteProductUseCase
-import com.cessup.domain.usecases.products.FindBySerialNumberUseCase
-import com.cessup.domain.usecases.products.RegisterProductUseCase
-import com.cessup.domain.usecases.products.UpdateDetailsProductUseCase
-import com.cessup.domain.usecases.products.UpdateProductUseCase
-import com.cessup.domain.usecases.session.AuthenticateUseCase
-import com.cessup.domain.usecases.session.DeleteRoleUseCase
-import com.cessup.domain.usecases.session.DeleteUserUseCase
-import com.cessup.domain.usecases.session.GetRoleUseCase
-import com.cessup.domain.usecases.session.GetUserUseCase
-import com.cessup.domain.usecases.session.RegisterRoleUseCase
-import com.cessup.domain.usecases.session.RegisterUserUseCase
-import com.cessup.domain.usecases.session.ResetPasswordUseCase
-import com.cessup.domain.usecases.session.UpdateRoleUseCase
-import com.cessup.domain.usecases.session.UpdateUserDetailsUseCase
-import com.google.inject.Guice
+import com.cessup.di.appModule
+import com.cessup.di.useCaseModule
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.gson.gson
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.routing.routing
 import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
-import kotlin.jvm.java
+import org.koin.core.context.startKoin
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 fun Application.module() {
+
+    val koin = startKoin {
+        modules(appModule, useCaseModule)
+    }.koin
+
     install(ContentNegotiation) {
         gson{
             setPrettyPrinting()
@@ -53,6 +40,7 @@ fun Application.module() {
         }
     }
     install(CORS) { anyHost() }
+
     install(StatusPages) {
         exception<Throwable> { call, cause ->
             if(cause is AuthorizationException) {
@@ -64,44 +52,28 @@ fun Application.module() {
         }
     }
 
-    val jwt = JwtProvider
-    jwt.configure(this)
+    install(Authentication) {
+        jwt {
+            val blacklistedTokens = mutableSetOf<String>()
+            realm = Security.REALM
+            verifier(
+                JWT.require(Algorithm.HMAC256(Security.SECRET))
+                    .withAudience(Security.AUDIENCE)
+                    .withIssuer(Security.ISSUER).build()
+            )
 
-    val injector = Guice.createInjector(AppModule())
-
-    val register = injector.getInstance(RegisterUserUseCase::class.java)
-    val authentication = injector.getInstance(AuthenticateUseCase::class.java)
-    val resetPassword = injector.getInstance(ResetPasswordUseCase::class.java)
-    val getUser = injector.getInstance(GetUserUseCase::class.java)
-    val getRole = injector.getInstance(GetRoleUseCase::class.java)
-    val updateUserDetails = injector.getInstance(UpdateUserDetailsUseCase::class.java)
-    val deleteUser = injector.getInstance(DeleteUserUseCase::class.java)
-    val registerRole = injector.getInstance(RegisterRoleUseCase::class.java)
-    val updateRole = injector.getInstance(UpdateRoleUseCase::class.java)
-    val deleteRole = injector.getInstance(DeleteRoleUseCase::class.java)
-
-
-    val registerProduct = injector.getInstance(RegisterProductUseCase::class.java)
-    val findProduct = injector.getInstance(FindBySerialNumberUseCase::class.java)
-    val deleteProduct = injector.getInstance(DeleteProductUseCase::class.java)
-    val updateProduct = injector.getInstance(UpdateProductUseCase::class.java)
-    val updateProductDetails = injector.getInstance(UpdateDetailsProductUseCase::class.java)
-
-    val newDrinkUseCase = injector.getInstance(NewDrinkUseCase::class.java)
-    val updateDrinkUseCase = injector.getInstance(UpdateDrinkUseCase::class.java)
-    val deleteDrinkUseCase = injector.getInstance(DeleteDrinkUseCase::class.java)
-    val getDrinksUseCase = injector.getInstance(GetDrinksUseCase::class.java)
-
-    val newMealUseCase = injector.getInstance(NewMealUseCase::class.java)
-    val updateMealUseCase = injector.getInstance(UpdateMealUseCase::class.java)
-    val deleteMealUseCase = injector.getInstance(DeleteMealUseCase::class.java)
-    val getMealsUseCase = injector.getInstance(GetMealsUseCase::class.java)
+            validate { credential ->
+                val token = credential.payload.getClaim("id").asString()
+                if (!token.isNullOrBlank()) JWTPrincipal(credential.payload) else null
+                if (!blacklistedTokens.contains(token)) JWTPrincipal(credential.payload) else null
+            }
+        }
+    }
 
     routing {
-        userRoutes(register, authentication,resetPassword,getUser, updateUserDetails,deleteUser, registerRole, updateRole, getRole, deleteRole, jwt)
-        productsRoutes(registerProduct,findProduct,deleteProduct,updateProduct,updateProductDetails)
-        drinkRoutes(newDrinkUseCase,updateDrinkUseCase,deleteDrinkUseCase,getDrinksUseCase)
-        mealRoutes(newMealUseCase,updateMealUseCase,deleteMealUseCase,getMealsUseCase)
-
+        userRoutes(koin)
+        productsRoutes(koin)
+        drinkRoutes(koin)
+        mealRoutes(koin)
     }
 }

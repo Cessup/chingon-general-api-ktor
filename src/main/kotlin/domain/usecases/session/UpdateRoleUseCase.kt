@@ -1,23 +1,20 @@
 package com.cessup.domain.usecases.session
 
-import com.cessup.data.services.Encrypt
 import com.cessup.data.services.RegisterRoleRequest
 import com.cessup.domain.models.session.Role
 import com.cessup.domain.repositories.UserRepository
-import com.google.inject.Inject
 import org.bson.types.ObjectId
-
 /**
  * Update of user details by id user in the system.
  *
  * This class update of details user information such as name, email, and age.
  *
- * @constructor Receiver a [UserRepository] and a [Encrypt] object because use it to origin data.
+ * @constructor Receiver a [UserRepository] is an object because use it to origin data.
  * @author
  *     Cessup
  * @since 1.0
  */
-class UpdateRoleUseCase @Inject constructor(private val userRepository: UserRepository) {
+class UpdateRoleUseCase(val repository: UserRepository) {
 
     /**
      * Returns new user.
@@ -26,7 +23,7 @@ class UpdateRoleUseCase @Inject constructor(private val userRepository: UserRepo
      * @return A [Boolean] that is the result about this process
      */
     suspend fun execute(updateRoleRequest: RegisterRoleRequest, id: ObjectId): Boolean {
-        userRepository.findRoles().filter { role ->
+        repository.findRoles().filter { role ->
             id == role?.id
         }.let { if (it.isEmpty()) throw IllegalArgumentException("Role not exist") }
 
@@ -36,6 +33,6 @@ class UpdateRoleUseCase @Inject constructor(private val userRepository: UserRepo
             updateRoleRequest.name,
         )
 
-        return userRepository.updateRole(role)
+        return repository.updateRole(role)
     }
 }

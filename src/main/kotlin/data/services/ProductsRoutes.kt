@@ -18,6 +18,7 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
+import org.koin.core.Koin
 
 /**
  * This function have all services in the Product module
@@ -30,12 +31,13 @@ import io.ktor.server.routing.route
  *     Cessup
  * @since 1.0
  */
-fun Route.productsRoutes(registerProductUseCase: RegisterProductUseCase,
-                         findBySerialNumberUseCase:FindBySerialNumberUseCase,
-                         deleteProductUseCase:DeleteProductUseCase,
-                         updateProductUseCase:UpdateProductUseCase,
-                         updateDetailsProductUseCase:UpdateDetailsProductUseCase
-) {
+fun Route.productsRoutes(koin: Koin) {
+    val registerProductUseCase = koin.get<RegisterProductUseCase>()
+    val findBySerialNumberUseCase= koin.get<FindBySerialNumberUseCase>()
+    val deleteProductUseCase= koin.get<DeleteProductUseCase>()
+    val updateProductUseCase= koin.get<UpdateProductUseCase>()
+    val updateDetailsProductUseCase= koin.get<UpdateDetailsProductUseCase>()
+
     route("/products") {
         /*
          All functions needs authorization to access to them

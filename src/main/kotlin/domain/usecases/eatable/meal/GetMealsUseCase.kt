@@ -1,7 +1,6 @@
 package com.cessup.domain.usecases.eatable.meal
 
 import com.cessup.domain.repositories.EatableRepository
-import com.google.inject.Inject
 
 /**
  * Find of meal in the system .
@@ -14,7 +13,7 @@ import com.google.inject.Inject
  * @since 1.0
  */
 @Suppress("UNCHECKED_CAST")
-class GetMealsUseCase @Inject constructor(val eatableRepository: EatableRepository) {
+class GetMealsUseCase(val repository: EatableRepository) {
 
     /**
      * Returns the sum of two integers.
@@ -24,6 +23,6 @@ class GetMealsUseCase @Inject constructor(val eatableRepository: EatableReposito
      * @return The [Any] found in this search.
      */
     suspend fun <R> execute(getMeals: suspend EatableRepository.() -> R): R {
-        return eatableRepository.getMeals() as R
+        return repository.getMeals() as R
     }
 }

@@ -28,8 +28,6 @@ dependencies {
     implementation("io.ktor:ktor-server-auth:2.3.4")
     implementation("io.ktor:ktor-server-auth-jwt:2.3.4")
 
-    // Optional: logging/debugging
-    implementation("ch.qos.logback:logback-classic:1.5.13")
     //Mongo Database
     implementation("org.mongodb:mongodb-driver-reactivestreams:4.11.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.7.3")
@@ -43,13 +41,18 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages:2.3.4")
     implementation("io.ktor:ktor-server-cors:2.3.4")
 
-    //Injection Dependencies
-    implementation("com.google.inject:guice:7.0.0")
     implementation("org.yaml:snakeyaml:2.2")
 
+    // Koin for Ktor
+    implementation("io.insert-koin:koin-ktor:3.5.3")
+    implementation("io.insert-koin:koin-logger-slf4j:3.5.0")
+
+    // Logging
+    implementation("ch.qos.logback:logback-classic:1.4.11")
+
     // JUnit 5
-    testImplementation("org.jetbrains.kotlin:kotlin-test") // <-- this gives you assertEquals, assertNotNull, etc.
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5") // <-- for running tests with JUnit 5
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation(platform("org.junit:junit-bom:5.10.2"))
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")

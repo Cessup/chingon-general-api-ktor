@@ -16,6 +16,7 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import org.bson.types.ObjectId
+import org.koin.core.Koin
 
 /**
  * This function have all services in the Product module
@@ -31,12 +32,12 @@ import org.bson.types.ObjectId
  *     Cessup
  * @since 1.0
  */
-fun Route.mealRoutes(
-    newMealUseCase: NewMealUseCase,
-    updateMealUseCase: UpdateMealUseCase,
-    deleteMealUseCase: DeleteMealUseCase,
-    getMealsUseCase: GetMealsUseCase,
-){
+fun Route.mealRoutes(koin: Koin){
+    val newMealUseCase = koin.get<NewMealUseCase>()
+    val updateMealUseCase = koin.get<UpdateMealUseCase>()
+    val deleteMealUseCase = koin.get<DeleteMealUseCase>()
+    val getMealsUseCase= koin.get<GetMealsUseCase>()
+
     route("eatable/meals/meal") {
         /*
          All functions needs authorization to access to them

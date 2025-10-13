@@ -1,7 +1,10 @@
 package com.cessup.data.services
 
 import at.favre.lib.crypto.bcrypt.BCrypt
-import com.google.inject.Singleton
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
+import org.bson.types.ObjectId
+import java.util.Date
 
 /**
  * Encrypt is object about data encryption
@@ -12,8 +15,25 @@ import com.google.inject.Singleton
  *     Cessup
  * @since 1.0
  */
-@Singleton
-object Encrypt{
+object Security{
+    const val SECRET = "secret"
+    const val ISSUER = "ktor.io"
+    const val AUDIENCE = "ktorAudience"
+    const val REALM = "ktor-chingon"
+
+    /**
+     * This function generate a token to the connection
+     *
+     * @param userId the user id is the data for create a unique token
+     */
+    fun generateToken(userId: ObjectId): String? =
+        JWT.create()
+            .withAudience(AUDIENCE)
+            .withIssuer(ISSUER)
+            .withClaim("id", userId.toString())
+            .withExpiresAt(Date(System.currentTimeMillis() + 5 * 60 * 1000)) //5 min
+            .sign(Algorithm.HMAC256(SECRET))
+
     /**
      * This function encrypt the password to use in the services
      *

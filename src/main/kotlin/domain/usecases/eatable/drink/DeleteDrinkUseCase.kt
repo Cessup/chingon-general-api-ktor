@@ -1,7 +1,6 @@
 package com.cessup.domain.usecases.eatable.drink
 
 import com.cessup.domain.repositories.EatableRepository
-import com.google.inject.Inject
 
 /**
  * Delete a drink of the system.
@@ -13,7 +12,7 @@ import com.google.inject.Inject
  *     Cessup
  * @since 1.0
  */
-class DeleteDrinkUseCase @Inject constructor(private val eatableRepository: EatableRepository) {
+class DeleteDrinkUseCase(val repository: EatableRepository)  {
     /**
      * Delete a drink.
      *
@@ -21,6 +20,6 @@ class DeleteDrinkUseCase @Inject constructor(private val eatableRepository: Eata
      * @return A new [Boolean] from the previously entered credentials
      */
     suspend fun <T, R> execute(id: T, deleteDrink: suspend EatableRepository.(T) -> R): R {
-        return eatableRepository.deleteDrink(id)
+        return repository.deleteDrink(id)
     }
 }
