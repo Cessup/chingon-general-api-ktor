@@ -1,5 +1,6 @@
 package com.cessup.domain.repositories
 
+import com.cessup.domain.models.sales.Merchant
 import com.cessup.domain.models.sales.Price
 import com.cessup.domain.models.sales.Promotion
 import org.bson.types.ObjectId
