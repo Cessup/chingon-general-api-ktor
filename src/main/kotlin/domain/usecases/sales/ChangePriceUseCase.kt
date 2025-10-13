@@ -17,8 +17,8 @@ class ChangePriceUseCase(private val salesRepository: SalesRepository) {
     /**
      * Update a price.
      *
-     * @param price this object got information about the price.
+     * @param updatePrice this object got information about the price.
      * @return A [Boolean] that is the result about operation.
      */
-    suspend fun execute(price: Price): Boolean = salesRepository.updatePrice(price)
+    suspend fun execute(updatePrice: Price): Boolean = salesRepository.updatePrice(updatePrice)
 }

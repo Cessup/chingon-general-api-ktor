@@ -68,17 +68,26 @@ class SalesRepositoryImpl(val database: MongoDatabase) : SalesRepository {
         deleteResult?.deletedCount == 1L
     }
     /**
+     * This function find a price by id
+     *
+     * @return a Price
+     */
+    override suspend fun getPriceByIdMerchantAndIdProduct(idMerchant: ObjectId, idProduct: ObjectId): Price? = priceCollection.find(eq("merchant", idMerchant)).first().awaitFirstOrNull()?.toPrice()
+
+    /**
      * This function give a list of prices for sale
      *
      * @return a List of Prices
      */
     override suspend fun getAllPrices(): List<Price> = priceCollection.find().asFlow().toList().map { it.toPrice() }
+
     /**
      * This function find a price by id
      *
      * @return a Price
      */
-    override suspend fun getPricesById(id: ObjectId): Price? = priceCollection.find(eq("_id", id)).first().awaitFirstOrNull()?.toPrice()
+    override suspend fun getPricesByIdMerchant(idMerchant: ObjectId): List<Price?> = priceCollection.find(eq("merchant", idMerchant)).asFlow().toList().map { it.toPrice() }
+
 
     private val promotionCollection = database.getCollection("promotion")
 
@@ -176,7 +185,7 @@ class SalesRepositoryImpl(val database: MongoDatabase) : SalesRepository {
      *
      * @return a Merchant
      */
-    override suspend fun getMerchantById(id: ObjectId): Merchant? = merchantCollection.find(eq("_id", id)).first().awaitFirstOrNull()?.toMerchant()
+    override suspend fun findMerchantById(name: String): Merchant? = merchantCollection.find(eq("name", name)).first().awaitFirstOrNull()?.toMerchant()
     /**
      * This function find a list of merchants
      *

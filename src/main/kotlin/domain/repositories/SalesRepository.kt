@@ -38,6 +38,12 @@ interface SalesRepository {
      */
     suspend fun deletePrice(id: ObjectId) : Boolean
     /**
+     * This function find a price by idMerchant and idProduct
+     *
+     * @return a Price
+     */
+    suspend fun getPriceByIdMerchantAndIdProduct(idMerchant: ObjectId, idProduct: ObjectId): Price?
+    /**
      * This function give a list of prices for sale
      *
      * @return a List of Prices
@@ -48,7 +54,7 @@ interface SalesRepository {
      *
      * @return a Price
      */
-    suspend fun getPricesById(id: ObjectId) : Price?
+    suspend fun getPricesByIdMerchant(idMerchant: ObjectId): List<Price?>
     /**
      * This function insert a new promotion in the database
      *
@@ -108,7 +114,7 @@ interface SalesRepository {
      *
      * @return a Merchant
      */
-    suspend fun getMerchantById(id: ObjectId) : Merchant?
+    suspend fun findMerchantById(name: String) : Merchant?
     /**
      * This function find a list of merchants
      *

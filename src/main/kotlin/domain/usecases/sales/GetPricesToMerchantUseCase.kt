@@ -1,6 +1,6 @@
 package com.cessup.domain.usecases.sales
 
-import com.cessup.domain.models.sales.Promotion
+import com.cessup.domain.models.sales.Price
 import com.cessup.domain.models.session.User
 import com.cessup.domain.repositories.SalesRepository
 import org.bson.types.ObjectId
@@ -15,12 +15,12 @@ import org.bson.types.ObjectId
  *     Cessup
  * @since 1.0
  */
-class GetPromotionUseCase(val repository: SalesRepository){
+class GetPricesToMerchantUseCase(val repository: SalesRepository) {
 
     /**
      * Returns the sum of two integers.
      *
      * @return A [User] from the previously email
      */
-    suspend fun execute(id: ObjectId): Promotion? = repository.getPromotionById(id)
+    suspend fun execute(idMerchant: ObjectId): List<Price?> = repository.getPricesByIdMerchant(idMerchant)
 }

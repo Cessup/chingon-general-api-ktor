@@ -3,11 +3,13 @@ package com.cessup.di
 import com.cessup.data.database.MongoConfig
 import com.cessup.data.repositories.EatableRepositoryImpl
 import com.cessup.data.repositories.ProductRepositoryImpl
+import com.cessup.data.repositories.SalesRepositoryImpl
 import com.cessup.domain.repositories.UserRepository
 import com.cessup.data.repositories.UserRepositoryImpl
 import com.cessup.data.services.Security
 import com.cessup.domain.repositories.EatableRepository
 import com.cessup.domain.repositories.ProductRepository
+import com.cessup.domain.repositories.SalesRepository
 import com.cessup.domain.usecases.eatable.drink.DeleteDrinkUseCase
 import com.cessup.domain.usecases.eatable.drink.GetDrinksUseCase
 import com.cessup.domain.usecases.eatable.drink.NewDrinkUseCase
@@ -21,6 +23,18 @@ import com.cessup.domain.usecases.products.FindBySerialNumberUseCase
 import com.cessup.domain.usecases.products.RegisterProductUseCase
 import com.cessup.domain.usecases.products.UpdateDetailsProductUseCase
 import com.cessup.domain.usecases.products.UpdateProductUseCase
+import com.cessup.domain.usecases.sales.AssignmentPriceUseCase
+import com.cessup.domain.usecases.sales.ChangePriceUseCase
+import com.cessup.domain.usecases.sales.ChangePromotionUseCase
+import com.cessup.domain.usecases.sales.DeleteMerchantUseCase
+import com.cessup.domain.usecases.sales.DeletePriceUseCase
+import com.cessup.domain.usecases.sales.GetPricesToMerchantUseCase
+import com.cessup.domain.usecases.sales.GetPricesUseCase
+import com.cessup.domain.usecases.sales.GetPromotionUseCase
+import com.cessup.domain.usecases.sales.GetPromotionsUseCase
+import com.cessup.domain.usecases.sales.NewMerchantUseCase
+import com.cessup.domain.usecases.sales.NewPromotionUseCase
+import com.cessup.domain.usecases.sales.UpdateMerchantUseCase
 import com.cessup.domain.usecases.session.AuthenticateUseCase
 import com.cessup.domain.usecases.session.DeleteRoleUseCase
 import com.cessup.domain.usecases.session.DeleteUserUseCase
@@ -58,7 +72,8 @@ val appModule = module {
             custom["databaseUri"].toString(),
             custom["sessionDB"].toString(),
             custom["productDB"].toString(),
-            custom["eatableDB"].toString()
+            custom["eatableDB"].toString(),
+            custom["salesDB"].toString(),
         )
     }
 
@@ -99,15 +114,28 @@ val appModule = module {
      *
      * @param MongoConfig the MongoConfig got configuration about database
      *
-     * @return [UserRepository] the object to use the User Repository
+     * @return [EatableRepository] the object to use the Eatable Repository
      */
     single<EatableRepository> {
         val config: MongoConfig = get()
         EatableRepositoryImpl(config.eatableDB)
     }
+
+    /**
+     * This function start to configure the framework
+     *
+     * @param MongoConfig the MongoConfig got configuration about database
+     *
+     * @return [UserRepository] the object to use the User Repository
+     */
+    single<SalesRepository> {
+        val config: MongoConfig = get()
+        SalesRepositoryImpl(config.salesDB)
+    }
 }
 
 val useCaseModule = module {
+    //Session
     single { AuthenticateUseCase(get(),get()) }
     single { DeleteRoleUseCase(get()) }
     single { DeleteUserUseCase(get()) }
@@ -118,20 +146,33 @@ val useCaseModule = module {
     single { ResetPasswordUseCase(get(),get()) }
     single { UpdateRoleUseCase(get()) }
     single { UpdateUserDetailsUseCase(get()) }
-
+    //Product
     single { DeleteProductUseCase(get()) }
     single { FindBySerialNumberUseCase(get()) }
     single { RegisterProductUseCase(get()) }
     single { UpdateProductUseCase(get()) }
     single { UpdateDetailsProductUseCase(get()) }
-
+    //Eatable
     single { DeleteDrinkUseCase(get()) }
     single { GetDrinksUseCase(get()) }
     single { NewDrinkUseCase(get()) }
     single { UpdateDrinkUseCase(get()) }
-
     single { DeleteMealUseCase(get()) }
     single { GetMealsUseCase(get()) }
     single { NewMealUseCase(get()) }
     single { UpdateMealUseCase(get()) }
+    //Sales
+    single { AssignmentPriceUseCase(get()) }
+    single { ChangePriceUseCase(get()) }
+    single { ChangePromotionUseCase(get()) }
+    single { DeleteMerchantUseCase(get()) }
+    single { DeleteProductUseCase(get()) }
+    single { DeletePriceUseCase(get()) }
+    single { GetPricesUseCase(get()) }
+    single { GetPricesToMerchantUseCase(get()) }
+    single { GetPromotionUseCase(get()) }
+    single { GetPromotionsUseCase(get()) }
+    single { NewMerchantUseCase(get()) }
+    single { NewPromotionUseCase(get()) }
+    single { UpdateMerchantUseCase(get()) }
 }

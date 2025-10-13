@@ -13,7 +13,7 @@ import org.bson.types.ObjectId
  */
 data class Price (
     val id: ObjectId = ObjectId(),
-    val mount: Int,
+    val mount: Double,
     val currency: String,
     val merchant: ObjectId= ObjectId(),
     val item: ObjectId= ObjectId()
