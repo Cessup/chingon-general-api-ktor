@@ -1,5 +1,7 @@
 package com.cessup.domain.models.sales
 
+import org.bson.types.ObjectId
+
 /**
  * Represents a Merchant.
  *
@@ -7,6 +9,6 @@ package com.cessup.domain.models.sales
  * @property name this is the name for the promotion
  */
 data class Merchant(
-    val id: String,
-    val name:String,
+    val id: ObjectId = ObjectId(),
+    val name:String
 )

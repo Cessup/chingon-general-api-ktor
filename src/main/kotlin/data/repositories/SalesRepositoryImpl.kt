@@ -1,20 +1,21 @@
 package com.cessup.data.repositories
 
-import com.cessup.data.models.sales.MerchantEntity
-import com.cessup.data.models.sales.PriceEntity
-import com.cessup.data.models.sales.PromotionEntity
+import com.cessup.data.entities.toDocument
+import com.cessup.data.entities.toMerchant
+import com.cessup.data.entities.toPrice
+import com.cessup.data.entities.toPromotion
 import com.cessup.domain.models.sales.Merchant
 import com.cessup.domain.models.sales.Price
 import com.cessup.domain.models.sales.Promotion
 import com.cessup.domain.repositories.SalesRepository
-import com.google.inject.Inject
+import com.mongodb.client.model.Filters.eq
+import com.mongodb.reactivestreams.client.MongoDatabase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.withContext
 import org.bson.types.ObjectId
-import org.litote.kmongo.coroutine.CoroutineDatabase
-import org.litote.kmongo.eq
-import org.litote.kmongo.newId
-import org.litote.kmongo.toId
 
 /**
  * Sales Repository have every data about the sales.
@@ -26,8 +27,8 @@ import org.litote.kmongo.toId
  *     Cessup
  * @since 1.0
  */
-class SalesRepositoryImpl@Inject constructor(database: CoroutineDatabase) : SalesRepository {
-    private val saleCollection = database.getCollection<PriceEntity>("sales")
+class SalesRepositoryImpl(val database: MongoDatabase) : SalesRepository {
+    private val priceCollection = database.getCollection("prices")
 
     /**
      * This function insert a new price in the database
@@ -36,18 +37,8 @@ class SalesRepositoryImpl@Inject constructor(database: CoroutineDatabase) : Sale
      * @return a user
      */
     override suspend fun insertPrice(price: Price): Boolean = withContext(Dispatchers.IO) {
-        val priceEntity = PriceEntity(
-            newId(),
-            price.mount,
-            price.currency,
-            MerchantEntity(
-                price.merchant.id.toId(),
-                price.merchant.name
-            ),
-            price.item
-        )
         try {
-            saleCollection.insertOne(priceEntity)
+            priceCollection.insertOne(price.toDocument())
             true
         } catch (_: Exception) {
             false
@@ -60,22 +51,11 @@ class SalesRepositoryImpl@Inject constructor(database: CoroutineDatabase) : Sale
      * @return a Boolean this is the result
      */
     override suspend fun updatePrice(price: Price): Boolean = withContext(Dispatchers.IO) {
-        val priceEntity = PriceEntity(
-            newId(),
-            price.mount,
-            price.currency,
-            MerchantEntity(
-                price.merchant.id.toId(),
-                price.merchant.name
-            ),
-            price.item
-        )
-        val updateResult = saleCollection.replaceOne(
-            PriceEntity::id eq priceEntity.id,
-            priceEntity
-        )
-
-        updateResult.matchedCount > 0 && updateResult.modifiedCount > 0
+        val updateResult = priceCollection.updateOne(
+            eq("_id", price.id),
+            price.toDocument()
+        ).awaitFirstOrNull()
+        updateResult?.matchedCount == 1L
     }
     /**
      * This function delete a price object in the database
@@ -84,51 +64,33 @@ class SalesRepositoryImpl@Inject constructor(database: CoroutineDatabase) : Sale
      * @return a Boolean this is the result
      */
     override suspend fun deletePrice(id: ObjectId): Boolean = withContext(Dispatchers.IO) {
-        val deleteResult = saleCollection.deleteOneById(id)
-        deleteResult.deletedCount == 1L
+        val deleteResult = priceCollection.deleteOne(eq("_id", id)).awaitFirstOrNull()
+        deleteResult?.deletedCount == 1L
     }
     /**
-     * This function get a list of prices for sale
+     * This function give a list of prices for sale
      *
      * @return a List of Prices
      */
-    override suspend fun getPrices(): List<Price> = saleCollection.find().toList().let {
-        it.map { priceEntities ->
-            Price(
-                priceEntities.id.toString(),
-                priceEntities.mount,
-                priceEntities.currency,
-                Merchant(
-                    priceEntities.merchant.id.toString(),
-                    priceEntities.merchant.name
-                ),
-                priceEntities.item
-            )
-        }
-    }
+    override suspend fun getAllPrices(): List<Price> = priceCollection.find().asFlow().toList().map { it.toPrice() }
+    /**
+     * This function find a price by id
+     *
+     * @return a Price
+     */
+    override suspend fun getPricesById(id: ObjectId): Price? = priceCollection.find(eq("_id", id)).first().awaitFirstOrNull()?.toPrice()
 
-    private val promotionCollection = database.getCollection<PromotionEntity>("promotion")
+    private val promotionCollection = database.getCollection("promotion")
 
     /**
      * This function insert a new promotion in the database
      *
      * @param promotion the promotion is the object with information for offers
-     * @return a user
+     * @return a Boolean
      */
     override suspend fun insertPromotion(promotion: Promotion): Boolean = withContext(Dispatchers.IO) {
-        val promotionEntity = PromotionEntity(
-            newId(),
-            promotion.name,
-            promotion.details,
-            promotion.discount,
-            promotion.expiration,
-            MerchantEntity(
-                promotion.merchant.id.toId(),
-                promotion.merchant.name
-            ),
-        )
         try {
-            promotionCollection.insertOne(promotionEntity)
+            promotionCollection.insertOne(promotion.toDocument())
             true
         } catch (_: Exception) {
             false
@@ -141,24 +103,11 @@ class SalesRepositoryImpl@Inject constructor(database: CoroutineDatabase) : Sale
      * @return a Boolean this is the result
      */
     override suspend fun updatePromotion(promotion: Promotion): Boolean = withContext(Dispatchers.IO) {
-        val promotionEntity = PromotionEntity(
-            newId(),
-            promotion.name,
-            promotion.details,
-            promotion.discount,
-            promotion.expiration,
-            MerchantEntity(
-                promotion.merchant.id.toId(),
-                promotion.merchant.name
-            ),
-        )
-
-        val updateResult = promotionCollection.replaceOne(
-            PromotionEntity::id eq promotionEntity.id,
-            promotionEntity
-        )
-
-        updateResult.matchedCount > 0 && updateResult.modifiedCount > 0
+        val updateResult = promotionCollection.updateOne(
+            eq("_id", promotion.id),
+            promotion.toDocument()
+        ).awaitFirstOrNull()
+        updateResult?.matchedCount == 1L
     }
     /**
      * This function delete a promotion object in the database
@@ -167,50 +116,73 @@ class SalesRepositoryImpl@Inject constructor(database: CoroutineDatabase) : Sale
      * @return a Boolean this is the result
      */
     override suspend fun deletePromotion(id: ObjectId): Boolean = withContext(Dispatchers.IO) {
-        val deleteResult = promotionCollection.deleteOneById(id)
-        deleteResult.deletedCount == 1L
+        val deleteResult = promotionCollection.deleteOne(eq("_id", id)).awaitFirstOrNull()
+        deleteResult?.deletedCount == 1L
     }
     /**
-     * This function get a promotion object
+     * This function find a promotion by id
      *
-     * @return a List of Prices
+     * @return a Promotion
      */
-    override suspend fun getPromotion(id: ObjectId): Promotion? = promotionCollection.findOneById(id)
-    ?.let {
-        Promotion(
-            it.id.toString(),
-            it.name,
-            it.details,
-            it.discount,
-            it.expiration,
-            Merchant(
-                it.merchant.id.toString(),
-                it.merchant.name
-            )
-        )
-    }
+    override suspend fun getPromotionById(id: ObjectId): Promotion? = promotionCollection.find(eq("_id", id)).first().awaitFirstOrNull()?.toPromotion()
 
     /**
-     * This function get a list of promotion for offers
+     * This function find a list of merchant for offers
      *
-     * @return a List of Prices
+     * @return a List of Promotions
      */
-    override suspend fun getPromotionList(): List<Promotion> = promotionCollection.find().toList().let {
-        it.map { promotionEntity ->
-            Promotion(
-                promotionEntity.id.toString(),
-                promotionEntity.name,
-                promotionEntity.details,
-                promotionEntity.discount,
-                promotionEntity.expiration,
-                Merchant(
-                    promotionEntity.merchant.id.toString(),
-                    promotionEntity.merchant.name
-                )
-            )
+    override suspend fun getAllPromotions(): List<Promotion> = promotionCollection.find().asFlow().toList().map { it.toPromotion() }
+
+    private val merchantCollection = database.getCollection("merchants")
+    /**
+     * This function insert a new merchant in the database
+     *
+     * @param merchant the promotion is the object with information for offers
+     * @return a user
+     */
+    override suspend fun insertMerchant(merchant: Merchant): Boolean = withContext(Dispatchers.IO) {
+        try {
+            merchantCollection.insertOne(merchant.toDocument())
+            true
+        } catch (_: Exception) {
+            false
         }
     }
-
+    /**
+     * This function update a merchant object in the database
+     *
+     * @param merchant the merchant is the object with information for offers
+     * @return a Boolean this is the result
+     */
+    override suspend fun updateMerchant(merchant: Merchant): Boolean = withContext(Dispatchers.IO) {
+        val updateResult = merchantCollection.updateOne(
+            eq("_id", merchant.id),
+            merchant.toDocument()
+        ).awaitFirstOrNull()
+        updateResult?.matchedCount == 1L
+    }
+    /**
+     * This function delete a merchant object in the database
+     *
+     * @param id is the param to find the object to delete
+     * @return a Boolean this is the result
+     */
+    override suspend fun deleteMerchant(id: ObjectId): Boolean = withContext(Dispatchers.IO) {
+        val deleteResult = merchantCollection.deleteOne(eq("_id", id)).awaitFirstOrNull()
+        deleteResult?.deletedCount == 1L
+    }
+    /**
+     * This function find the merchant by id
+     *
+     * @return a Merchant
+     */
+    override suspend fun getMerchantById(id: ObjectId): Merchant? = merchantCollection.find(eq("_id", id)).first().awaitFirstOrNull()?.toMerchant()
+    /**
+     * This function find a list of merchants
+     *
+     * @return a List of Merchant
+     */
+    override suspend fun getAllMerchants(): List<Merchant> = merchantCollection.find().asFlow().toList().map { it.toMerchant() }
 }
 
 

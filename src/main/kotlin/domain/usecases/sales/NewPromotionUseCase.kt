@@ -2,7 +2,6 @@ package com.cessup.domain.usecases.sales
 
 import com.cessup.domain.models.sales.Promotion
 import com.cessup.domain.repositories.SalesRepository
-import com.google.inject.Inject
 
 /**
  * New of Promotion for some things.
@@ -14,7 +13,7 @@ import com.google.inject.Inject
  *     Cessup
  * @since 1.0
  */
-class NewPromotionUseCase @Inject constructor(private val salesRepository: SalesRepository) {
+class NewPromotionUseCase (private val salesRepository: SalesRepository) {
     /**
      * Returns new promotion.
      *

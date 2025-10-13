@@ -1,7 +1,6 @@
 package com.cessup.domain.usecases.sales
 
 import com.cessup.domain.repositories.SalesRepository
-import com.google.inject.Inject
 import org.bson.types.ObjectId
 
 /**
@@ -14,7 +13,7 @@ import org.bson.types.ObjectId
  *     Cessup
  * @since 1.0
  */
-class DeletePromotionUseCase@Inject constructor(private val salesRepository: SalesRepository) {
+class DeletePromotionUseCase(private val salesRepository: SalesRepository) {
     /**
      * Delete a price.
      *

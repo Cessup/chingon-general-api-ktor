@@ -1,4 +1,4 @@
 package com.cessup.domain.usecases.sales
 
-class GetPromotionUseCase {
+class GetPromotionsUseCase {
 }

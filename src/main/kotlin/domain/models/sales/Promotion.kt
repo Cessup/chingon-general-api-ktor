@@ -1,6 +1,6 @@
 package com.cessup.domain.models.sales
 
-import java.sql.Date
+import org.bson.types.ObjectId
 
 /**
  * Represents a Promotion.
@@ -13,10 +13,10 @@ import java.sql.Date
  * @property merchant the merchant is the owner of the promotion
  */
 data class Promotion (
-    val id: String,
+    val id: ObjectId = ObjectId(),
     val name: String,
     val details : String,
     val discount: Int,
-    val expiration: Date,
-    val merchant: Merchant
+    val expiration: Long,
+    val merchant: ObjectId = ObjectId()
 )

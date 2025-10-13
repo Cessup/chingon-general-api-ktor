@@ -1,5 +1,6 @@
 package com.cessup.domain.repositories
 
+import com.cessup.domain.models.sales.Merchant
 import com.cessup.domain.models.sales.Price
 import com.cessup.domain.models.sales.Promotion
 import org.bson.types.ObjectId
@@ -37,16 +38,22 @@ interface SalesRepository {
      */
     suspend fun deletePrice(id: ObjectId) : Boolean
     /**
-     * This function get a list of prices for sale
+     * This function give a list of prices for sale
      *
      * @return a List of Prices
      */
-    suspend fun getPrices() : List<Price>
+    suspend fun getAllPrices() : List<Price>
+    /**
+     * This function find a price by id
+     *
+     * @return a Price
+     */
+    suspend fun getPricesById(id: ObjectId) : Price?
     /**
      * This function insert a new promotion in the database
      *
      * @param promotion the promotion is the object with information for offers
-     * @return a user
+     * @return a Boolean
      */
     suspend fun insertPromotion(promotion: Promotion) : Boolean
     /**
@@ -64,15 +71,48 @@ interface SalesRepository {
      */
     suspend fun deletePromotion(id: ObjectId) : Boolean
     /**
-     * This function get a promotion object
+     * This function find a promotion by id
      *
-     * @return a List of Prices
+     * @return a Promotion
      */
-    suspend fun getPromotion(id: ObjectId) : Promotion?
+    suspend fun getPromotionById(id: ObjectId) : Promotion?
     /**
-     * This function get a list of promotion for offers
+     * This function find a list of merchant for offers
      *
-     * @return a List of Prices
+     * @return a List of Promotions
      */
-    suspend fun getPromotionList() : List<Promotion?>
+    suspend fun getAllPromotions(): List<Promotion>
+    /**
+     * This function insert a new merchant in the database
+     *
+     * @param merchant the promotion is the object with information for offers
+     * @return a user
+     */
+    suspend fun insertMerchant(merchant: Merchant) : Boolean
+    /**
+     * This function update a merchant object in the database
+     *
+     * @param merchant the merchant is the object with information for offers
+     * @return a Boolean this is the result
+     */
+    suspend fun updateMerchant(merchant: Merchant) : Boolean
+    /**
+     * This function delete a merchant object in the database
+     *
+     * @param id is the param to find the object to delete
+     * @return a Boolean this is the result
+     */
+    suspend fun deleteMerchant(id: ObjectId) : Boolean
+    /**
+     * This function find the merchant by id
+     *
+     * @return a Merchant
+     */
+    suspend fun getMerchantById(id: ObjectId) : Merchant?
+    /**
+     * This function find a list of merchants
+     *
+     * @return a List of Merchant
+     */
+    suspend fun getAllMerchants(): List<Merchant>
 }

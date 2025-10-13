@@ -1,5 +1,7 @@
 package com.cessup.domain.models.sales
 
+import org.bson.types.ObjectId
+
 /**
  * Represents a Price.
  *
@@ -10,9 +12,9 @@ package com.cessup.domain.models.sales
  * @property item that is the object for the price
  */
 data class Price (
-    val id : String,
+    val id: ObjectId = ObjectId(),
     val mount: Int,
     val currency: String,
-    val merchant: Merchant,
-    val item: Object
+    val merchant: ObjectId= ObjectId(),
+    val item: ObjectId= ObjectId()
 )
