@@ -120,8 +120,8 @@ If you want to use it you should check the next link because there is a workspac
 The app uses the following multiplatform dependencies in its implementation:
 
 - [Ktor](https://ktor.io/) for networking
-- [Guice](https://github.com/google/guice/wiki/gettingstarted) for dependency injection
-- [Kmongo](https://litote.org/kmongo/) for dependency injection but it will migrate to MongoDB Kotlin Driver because it is deprecate.
+- [Koin](https://insert-koin.io) for dependency injection
+- [MongoDB Driver](https://www.mongodb.com/docs/languages/kotlin/) It is to use the database
 
 > The libraries are going to update when any project will absolute but before data we'll notify you. But you are free to use anything libraries in thins project because that is just a example.
 
