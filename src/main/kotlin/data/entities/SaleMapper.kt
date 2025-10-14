@@ -15,7 +15,7 @@ fun Price.toDocument(): Document = Document()
 fun Document.toPrice(): Price =
     Price(
         id = getObjectId("_id"),
-        mount = getInteger("mount"),
+        mount = getDouble("mount"),
         currency = getString("currency"),
         merchant = getObjectId("merchant"),
         item = getObjectId("item")

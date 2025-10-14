@@ -1,7 +1,6 @@
 package com.cessup.data.models.sales
 
-import org.bson.codecs.pojo.annotations.BsonId
-import org.litote.kmongo.Id
+import org.bson.types.ObjectId
 import java.sql.Date
 
 /**
@@ -14,8 +13,8 @@ import java.sql.Date
  * @property expiration that is the date to expire that
  * @property merchant the merchant is the owner of the promotion
  */
-data class PromotionEntity (
-    @BsonId val id: Id<PromotionEntity>,
+data class Promotion (
+    val id: ObjectId = ObjectId(),
     val name: String,
     val details : String,
     val discount: Int,

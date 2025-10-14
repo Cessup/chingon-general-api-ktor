@@ -7,6 +7,7 @@ import com.cessup.data.services.Security
 import com.cessup.data.services.eatable.drinkRoutes
 import com.cessup.data.services.eatable.mealRoutes
 import com.cessup.data.services.productsRoutes
+import com.cessup.data.services.salesRoutes
 import com.cessup.data.services.userRoutes
 import com.cessup.di.appModule
 import com.cessup.di.useCaseModule
@@ -75,5 +76,6 @@ fun Application.module() {
         productsRoutes(koin)
         drinkRoutes(koin)
         mealRoutes(koin)
+        salesRoutes(koin)
     }
 }

@@ -1,7 +1,6 @@
 package com.cessup.data.models.sales
 
-import org.bson.codecs.pojo.annotations.BsonId
-import org.litote.kmongo.Id
+import org.bson.types.ObjectId
 
 /**
  * Represents a Price.
@@ -12,8 +11,8 @@ import org.litote.kmongo.Id
  * @property merchant Create new scratch file from selection
  * @property item that is the object for the price
  */
-data class PriceEntity (
-    @BsonId val id: Id<PriceEntity>,
+data class Price(
+    val id: ObjectId = ObjectId(),
     val mount: Int,
     val currency: String,
     val merchant: MerchantEntity,

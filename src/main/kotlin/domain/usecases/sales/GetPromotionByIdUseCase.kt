@@ -15,7 +15,7 @@ import org.bson.types.ObjectId
  *     Cessup
  * @since 1.0
  */
-class GetPromotionUseCase(val repository: SalesRepository){
+class GetPromotionByIdUseCase(val repository: SalesRepository){
 
     /**
      * Returns the sum of two integers.

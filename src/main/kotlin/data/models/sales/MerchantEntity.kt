@@ -1,7 +1,6 @@
 package com.cessup.data.models.sales
 
-import org.bson.codecs.pojo.annotations.BsonId
-import org.litote.kmongo.Id
+import org.bson.types.ObjectId
 
 /**
  * Represents a Merchant.
@@ -10,6 +9,6 @@ import org.litote.kmongo.Id
  * @property name this is the name for the promotion
  */
 data class MerchantEntity(
-    @BsonId val id: Id<MerchantEntity>,
-    val name:String,
+    val id: ObjectId = ObjectId(),
+    val name:String
 )

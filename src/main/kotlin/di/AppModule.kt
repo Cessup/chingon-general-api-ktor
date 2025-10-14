@@ -28,9 +28,10 @@ import com.cessup.domain.usecases.sales.ChangePriceUseCase
 import com.cessup.domain.usecases.sales.ChangePromotionUseCase
 import com.cessup.domain.usecases.sales.DeleteMerchantUseCase
 import com.cessup.domain.usecases.sales.DeletePriceUseCase
+import com.cessup.domain.usecases.sales.DeletePromotionUseCase
 import com.cessup.domain.usecases.sales.GetPricesToMerchantUseCase
 import com.cessup.domain.usecases.sales.GetPricesUseCase
-import com.cessup.domain.usecases.sales.GetPromotionUseCase
+import com.cessup.domain.usecases.sales.GetPromotionByIdUseCase
 import com.cessup.domain.usecases.sales.GetPromotionsUseCase
 import com.cessup.domain.usecases.sales.NewMerchantUseCase
 import com.cessup.domain.usecases.sales.NewPromotionUseCase
@@ -167,10 +168,11 @@ val useCaseModule = module {
     single { ChangePromotionUseCase(get()) }
     single { DeleteMerchantUseCase(get()) }
     single { DeleteProductUseCase(get()) }
+    single { DeletePromotionUseCase(get()) }
     single { DeletePriceUseCase(get()) }
     single { GetPricesUseCase(get()) }
     single { GetPricesToMerchantUseCase(get()) }
-    single { GetPromotionUseCase(get()) }
+    single { GetPromotionByIdUseCase(get()) }
     single { GetPromotionsUseCase(get()) }
     single { NewMerchantUseCase(get()) }
     single { NewPromotionUseCase(get()) }
