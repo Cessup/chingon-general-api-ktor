@@ -100,12 +100,13 @@ if you need more information about it you can check the next link
 ## Features
 Here's a list of features included in this project:
 
-| Name                                                                                        | Description                                                                                           |
-|---------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| Name                                                                                          | Description                                                                                           |
+|-----------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
 | [Session](https://www.postman.com/cessupx/chingon-workspace/folder/goo6ezk/session-services)  | There are all services about session like sign in or sing up.                                         |
 | [Product](https://www.postman.com/cessupx/chingon-workspace/folder/15fk1y4/products-services) | There are all services about products like insert, update, delete and every thing about products.     |
 | [Eatable](https://www.postman.com/cessupx/chingon-workspace/folder/fjmlivp/eatable-services)  | There are all services about eatable like drinks or meals.                                            |
 | [Sales](https://www.postman.com/cessupx/chingon-workspace/overview)                           | There are all services about sales like price or promotion. (It is in progress to do)                 |
+| [Orders](https://www.postman.com/cessupx/chingon-workspace/overview)                          | There are all services about orders.                                                                  |
 | [Payments](https://www.postman.com/cessupx/chingon-workspace/overview)                        | There are all services about payments like communication with the bank. (It is in progress to do)     |
 | [Delivery](https://www.postman.com/cessupx/chingon-workspace/overview)                        | There are all services about delivery like pick-up, on the way and delivery.(It is in progress to do) |
 
