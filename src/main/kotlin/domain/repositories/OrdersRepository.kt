@@ -37,7 +37,7 @@ interface OrdersRepository {
      */
     suspend fun updateStatus(order: Order) : Boolean
     /**
-     * This function delete a new order in the database
+     * This function delete a order in the database
      *
      * @param order the order contain all items to sales
      * @return result in boolean value
@@ -56,9 +56,9 @@ interface OrdersRepository {
      */
     suspend fun getOrdersByIdUser(id: ObjectId): List<Order?>
     /**
-     * This function obtains a list of orders from the database
+     * This function obtains a list of orders from the database by PostalCode
      *
      * @return result an orders value
      */
-    suspend fun getOrdersByAddress(address: Address): Order?
+    suspend fun getOrdersByPD(address: Address): Order?
 }

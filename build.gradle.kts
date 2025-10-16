@@ -48,7 +48,7 @@ dependencies {
     implementation("io.insert-koin:koin-logger-slf4j:3.5.0")
 
     // Logging
-    implementation("ch.qos.logback:logback-classic:1.4.11")
+    implementation("ch.qos.logback:logback-classic:1.5.13")
 
     // JUnit 5
     testImplementation("org.jetbrains.kotlin:kotlin-test")

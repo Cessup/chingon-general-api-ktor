@@ -17,7 +17,8 @@ class MongoConfig( connectionString: String,
                                       val userDBString: String,
                                       val productDBString: String,
                                       val eatableDBString: String,
-                                      val salesDBString: String
+                                      val salesDBString: String,
+                                      val ordersDBString: String
     ) {
 
     val mongoClient: MongoClient = MongoClients.create(connectionString)
@@ -47,4 +48,10 @@ class MongoConfig( connectionString: String,
     val salesDB: MongoDatabase
         get()= mongoClient.getDatabase(salesDBString)
 
+    /**
+     * This function give a database
+     * Sales is a database
+     */
+    val ordersDB: MongoDatabase
+        get()= mongoClient.getDatabase(ordersDBString)
 }

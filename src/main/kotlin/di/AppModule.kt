@@ -2,12 +2,14 @@ package com.cessup.di
 
 import com.cessup.data.database.MongoConfig
 import com.cessup.data.repositories.EatableRepositoryImpl
+import com.cessup.data.repositories.OrdersRepositoryImpl
 import com.cessup.data.repositories.ProductRepositoryImpl
 import com.cessup.data.repositories.SalesRepositoryImpl
 import com.cessup.domain.repositories.UserRepository
 import com.cessup.data.repositories.UserRepositoryImpl
 import com.cessup.data.services.Security
 import com.cessup.domain.repositories.EatableRepository
+import com.cessup.domain.repositories.OrdersRepository
 import com.cessup.domain.repositories.ProductRepository
 import com.cessup.domain.repositories.SalesRepository
 import com.cessup.domain.usecases.eatable.drink.DeleteDrinkUseCase
@@ -75,6 +77,7 @@ val appModule = module {
             custom["productDB"].toString(),
             custom["eatableDB"].toString(),
             custom["salesDB"].toString(),
+            custom["ordersDB"].toString()
         )
     }
 
@@ -132,6 +135,18 @@ val appModule = module {
     single<SalesRepository> {
         val config: MongoConfig = get()
         SalesRepositoryImpl(config.salesDB)
+    }
+
+    /**
+     * This function start to configure the framework
+     *
+     * @param MongoConfig the MongoConfig got configuration about database
+     *
+     * @return [UserRepository] the object to use the User Repository
+     */
+    single<OrdersRepository> {
+        val config: MongoConfig = get()
+        OrdersRepositoryImpl(config.salesDB)
     }
 }
 
